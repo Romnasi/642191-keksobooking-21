@@ -22,6 +22,11 @@ const MapSize = {
   MAX_HEIGHT: 630,
 };
 
+const Pin = {
+  WIDTH: 50,
+  HEIGHT: 70
+};
+
 const NUMBER_OF_ADS = 8;
 
 const map = document.querySelector(`.map`);
@@ -130,7 +135,7 @@ const getAdOffer = function (location) {
 
 // Генерирует массив с данными объявлений
 const getAds = function () {
-  let ads = [];
+  const ads = [];
 
   for (let i = 0; i < NUMBER_OF_ADS; i++) {
     const location = getAdLocation();
@@ -148,9 +153,13 @@ const getAds = function () {
 // Создаем объявление
 const renderAdOnMap = function (ad) {
   const pinElement = pinTemplate.cloneNode(true);
-  pinElement.style.cssText = `left: ${ad.location.x}px; top: ${ad.location.y}px;`;
-  pinElement.querySelector(`img`).src = ad.author.avatar;
-  pinElement.querySelector(`img`).alt = ad.offer.title;
+  const pinX = ad.location.x - Pin.WIDTH / 2;
+  const pinY = ad.location.y - Pin.HEIGHT;
+  pinElement.style.left = `${pinX}px`;
+  pinElement.style.top = `${pinY}px`;
+  const avatarElement = pinElement.querySelector(`img`);
+  avatarElement.src = ad.author.avatar;
+  avatarElement.alt = ad.offer.title;
 
   return pinElement;
 };
