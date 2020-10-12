@@ -32,7 +32,10 @@ const Offer = {
   MAX_PRICE: 5000,
   MIN_ROOMS: 1,
   MAX_ROOMS: 12,
-  PERSON_PER_ROOM: 2
+  PERSON_PER_ROOM: 2,
+  PHOTO_WIDTH: 45,
+  PHOTO_HEIGHT: 40,
+  PHOTO_ALT: `Фотография жилья`
 };
 
 const MapSize = {
@@ -213,9 +216,9 @@ const renderChildElements = function (
 
     if (isImg) {
       childElement.src = element;
-      childElement.width = 45;
-      childElement.height = 40;
-      childElement.alt = `Фотография жилья`;
+      childElement.width = Offer.PHOTO_WIDTH;
+      childElement.height = Offer.PHOTO_HEIGHT;
+      childElement.alt = Offer.PHOTO_ALT;
     }
 
     fragment.appendChild(childElement);
