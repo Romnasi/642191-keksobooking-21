@@ -191,14 +191,21 @@ const removeChildren = function (element) {
 };
 
 
+const updateOfferImg = function (childElement, element) {
+  childElement.src = element;
+  childElement.width = Offer.PHOTO_WIDTH;
+  childElement.height = Offer.PHOTO_HEIGHT;
+  childElement.alt = Offer.PHOTO_ALT;
+};
+
+
 // Создаем потомков из  массива
 const renderChildElements = function (
     parentNode,
     elements,
     tagName,
     basicClass,
-    startOfCompositeClass,
-    isImg
+    startOfCompositeClass
 ) {
   const fragment = document.createDocumentFragment();
 
@@ -214,11 +221,8 @@ const renderChildElements = function (
       childElement.classList.add(basicClass);
     }
 
-    if (isImg) {
-      childElement.src = element;
-      childElement.width = Offer.PHOTO_WIDTH;
-      childElement.height = Offer.PHOTO_HEIGHT;
-      childElement.alt = Offer.PHOTO_ALT;
+    if (tagName === `img`) {
+      updateOfferImg(childElement, element);
     }
 
     fragment.appendChild(childElement);
@@ -234,8 +238,7 @@ const renderCardElements = function (
     card,
     elementsArray,
     basicClass,
-    startOfCompositeClass,
-    isImg
+    startOfCompositeClass
 ) {
   const parentNode = card.querySelector(parentSelector);
 
@@ -245,8 +248,7 @@ const renderCardElements = function (
       elementsArray,
       childTagName,
       basicClass,
-      startOfCompositeClass,
-      isImg
+      startOfCompositeClass
   );
 };
 
@@ -276,8 +278,7 @@ const renderCard = function (ad) {
       cardElement,
       ad.offer.features,
       `popup__feature`,
-      `popup__feature--`,
-      false
+      `popup__feature--`
   );
 
   cardDescription.textContent = ad.offer.description;
@@ -289,8 +290,7 @@ const renderCard = function (ad) {
       cardElement,
       ad.offer.photos,
       `popup__photo`,
-      false,
-      true
+      false
   );
 
   cardAvatar.src = ad.author.avatar;
