@@ -60,7 +60,7 @@ const types = {
 };
 
 const map = document.querySelector(`.map`);
-const mapPins = map.querySelector(`.map__pins`);
+const mapAds = map.querySelector(`.map__pins`);
 const filtersContainer = map.querySelector(`.map__filters-container`);
 
 // Используем шаблоны
@@ -191,65 +191,38 @@ const removeChildren = function (element) {
 };
 
 
-const updateOfferImg = function (childElement, element) {
+const createOfferFeature = function (element) {
+  const childElement = document.createElement(`li`);
+  childElement.classList.add(`popup__feature`, `popup__feature--${element}`);
+  return childElement;
+};
+
+const createOfferImg = function (element) {
+  const childElement = document.createElement(`img`);
   childElement.src = element;
+  childElement.classList.add(`popup__photo`);
   childElement.width = Offer.PHOTO_WIDTH;
   childElement.height = Offer.PHOTO_HEIGHT;
   childElement.alt = Offer.PHOTO_ALT;
+
+  return childElement;
 };
 
 
-// Создаем потомков из  массива
-const renderChildElements = function (
-    parentNode,
-    elements,
-    tagName,
-    basicClass,
-    startOfCompositeClass
-) {
+// 1. Получить в функции список элементов которые хотим отрисовать
+const renderChildren = function (parentNode, elements, renderChild, clear = removeChildren) {
+  clear(parentNode);
+  // 2. Создать фрагмент
   const fragment = document.createDocumentFragment();
-
-  for (let i = 0; i < elements.length; i++) {
-    let element = elements[i];
-    const childElement = document.createElement(tagName);
-
-    // Создается составной класс если есть
-    if (startOfCompositeClass) {
-      const сompositeClass = startOfCompositeClass + element;
-      childElement.classList.add(basicClass, сompositeClass);
-    } else {
-      childElement.classList.add(basicClass);
-    }
-
-    if (tagName === `img`) {
-      updateOfferImg(childElement, element);
-    }
-
-    fragment.appendChild(childElement);
-  }
+  // 3. Перебрать элементы
+  elements.forEach(function (element) {
+    // 4. Создать DOM ноду, для каждого элемента
+    const childNode = renderChild(element);
+    // 5. Добавить ноду во фрагмент
+    fragment.appendChild(childNode);
+  });
+  // 6. После цикла, добавить фрагмент в родительскую ноду
   parentNode.appendChild(fragment);
-};
-
-
-// Создаем преимущества у карточки
-const renderCardElements = function (
-    parentSelector,
-    childTagName,
-    card,
-    elementsArray,
-    basicClass,
-    startOfCompositeClass
-) {
-  const parentNode = card.querySelector(parentSelector);
-
-  removeChildren(parentNode);
-  renderChildElements(
-      parentNode,
-      elementsArray,
-      childTagName,
-      basicClass,
-      startOfCompositeClass
-  );
 };
 
 
@@ -265,32 +238,37 @@ const renderCard = function (ad) {
   const cardDescription = cardElement.querySelector(`.popup__description`);
   const cardAvatar = cardElement.querySelector(`.popup__avatar`);
 
-  cardTitle.textContent = ad.offer.title;
-  cardPrice.textContent = `${ad.offer.price}₽/ночь`;
-  cardType.textContent = types[ad.offer.type];
-  cardCapacity.textContent = `${ad.offer.rooms} комнаты для ${ad.offer.guests} гостей`;
-  cardTime.textContent = `Заезд после ${ad.offer.checkin}, выезд до ${ad.offer.checkout}`;
+  if (ad.offer.title) {
+    cardTitle.textContent = ad.offer.title;
+  }
+  if (ad.offer.price) {
+    cardPrice.textContent = `${ad.offer.price}₽/ночь`;
+  }
+  if (ad.offer.type) {
+    cardType.textContent = types[ad.offer.type];
+  }
+  if (ad.offer.rooms) {
+    cardCapacity.textContent = `${ad.offer.rooms} комнаты для ${ad.offer.guests} гостей`;
+  }
+  if (ad.offer.checkin && ad.offer.checkout) {
+    cardTime.textContent = `Заезд после ${ad.offer.checkin}, выезд до ${ad.offer.checkout}`;
+  }
 
   // Cоздаем преимущества
-  renderCardElements(
-      `.popup__features`,
-      `li`,
-      cardElement,
+  renderChildren(
+      cardElement.querySelector(`.popup__features`),
       ad.offer.features,
-      `popup__feature`,
-      `popup__feature--`
+      createOfferFeature
   );
 
   cardDescription.textContent = ad.offer.description;
 
+
   // Cоздаем фотографии
-  renderCardElements(
-      `.popup__photos`,
-      `img`,
-      cardElement,
+  renderChildren(
+      cardElement.querySelector(`.popup__photos`),
       ad.offer.photos,
-      `popup__photo`,
-      false
+      createOfferImg
   );
 
   cardAvatar.src = ad.author.avatar;
@@ -299,30 +277,18 @@ const renderCard = function (ad) {
 };
 
 
-// Добавляем все карточки на карту
-const renderCardOnMap = function (adsData) {
-  const fragment = document.createDocumentFragment();
-  fragment.appendChild(renderCard(adsData[0]));
-  map.insertBefore(fragment, filtersContainer);
-};
-
-
-// Добавляем все объявления на карту
-const renderAdsOnMap = function (adsData) {
-  const fragment = document.createDocumentFragment();
-  for (let i = 0; i < adsData.length; i++) {
-    fragment.appendChild(renderAdOnMap(adsData[i]));
-  }
-  mapPins.appendChild(fragment);
+// Добавляем карточку на карту
+const renderCardOnMap = function (ad) {
+  map.insertBefore(renderCard(ad), filtersContainer);
 };
 
 
 // Вызываем функцию создания массива объявлений
 const ads = getAds();
 // Вызываем функцию создания объявлений на карте
-renderAdsOnMap(ads);
+renderChildren(mapAds, ads, renderAdOnMap);
 // Вызываем функцию создания карточки
-renderCardOnMap(ads);
+renderCardOnMap(ads[0]);
 
 
 map.classList.remove(`map--faded`);
