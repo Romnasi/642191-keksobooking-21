@@ -47,7 +47,20 @@ const MapSize = {
 
 const Pin = {
   WIDTH: 50,
-  HEIGHT: 70
+  HEIGHT: 70,
+};
+
+// X = 62 / 2 = 31, где 62 - ширина метки, 2 - пропорция: по ТЗ - нужна координата середины метки
+// Y = 62 + 22 - 6 = 78, где 62 - высота метки, 22 - высота основания метки, 6 - смещение вверх основания метки
+const ActivePinOffset = {
+  X: 31,
+  Y: 78
+};
+
+const DisabledMainPin = {
+  WIDTH: 65,
+  HEIGHT: 65,
+  PROPORTION_CENTER: 2
 };
 
 const NUMBER_OF_ADS = 8;
@@ -62,6 +75,21 @@ const types = {
 const map = document.querySelector(`.map`);
 const mapAds = map.querySelector(`.map__pins`);
 const filtersContainer = map.querySelector(`.map__filters-container`);
+
+// Метка активации
+const mainPin = map.querySelector(`.map__pin--main`);
+
+// Формы
+const adForm = document.querySelector(`.ad-form`);
+const adFormFieldsets = adForm.querySelectorAll(`fieldset`);
+
+const roomsNumber = adForm.querySelector(`#room_number`);
+const roomsCapacity = adForm.querySelector(`#capacity`);
+
+// Фильтры
+const mapFilters = document.querySelector(`.map__filters`).querySelectorAll(`select`);
+
+const inputAdress = document.querySelector(`#address`);
 
 // Используем шаблоны
 const pinTemplate = document.querySelector(`#pin`)
@@ -283,12 +311,118 @@ const renderCardOnMap = function (ad) {
 };
 
 
-// Вызываем функцию создания массива объявлений
-const ads = getAds();
-// Вызываем функцию создания объявлений на карте
-renderChildren(mapAds, ads, renderAdOnMap);
-// Вызываем функцию создания карточки
-renderCardOnMap(ads[0]);
+// Состояние филдсетов в форме
+const disableFieldsets = function (isDisabled) {
+  adFormFieldsets.forEach(function (fieldset) {
+    fieldset.disabled = isDisabled;
+  });
+};
+
+// Состояние селектов в форме
+const disableSelects = function (isDisabled) {
+  mapFilters.forEach(function (select) {
+    select.disabled = isDisabled;
+  });
+};
+
+const getLocationDisabledPin = function () {
+  const pinX = parseInt(mainPin.style.left, 10);
+  const pinY = parseInt(mainPin.style.top, 10);
+  const locationX = pinX + Math.ceil(DisabledMainPin.WIDTH / DisabledMainPin.PROPORTION_CENTER);
+  const locationY = pinY + Math.ceil(DisabledMainPin.HEIGHT / DisabledMainPin.PROPORTION_CENTER);
+
+  return `${locationX}, ${locationY}`;
+};
+
+const getLocationActivePin = function () {
+  const pinX = parseInt(mainPin.style.left, 10);
+  const pinY = parseInt(mainPin.style.top, 10);
+  const locationX = pinX + ActivePinOffset.X;
+  const locationY = pinY + ActivePinOffset.Y;
+
+  return `${locationX}, ${locationY}`;
+};
+
+// Неактивное состояние страницы
+const disablePage = function (isDisabled) {
+  if (isDisabled) {
+    map.classList.add(`map--faded`);
+    adForm.classList.add(`ad-form--disabled`);
+  } else {
+    map.classList.remove(`map--faded`);
+    adForm.classList.remove(`ad-form--disabled`);
+  }
+
+  disableFieldsets(isDisabled);
+  disableSelects(isDisabled);
+
+  inputAdress.value = getLocationDisabledPin();
+};
+
+disablePage(true);
 
 
-map.classList.remove(`map--faded`);
+// Валидация форм
+
+// Синхронизация полей Количество комнат - количество мест
+const validateRoomsCapacity = function (element) {
+  const currentRooms = parseInt(roomsNumber.value, 10);
+  const currentCapacity = parseInt(roomsCapacity.value, 10);
+
+  if (currentRooms < currentCapacity) {
+    element.setCustomValidity(`Для ${currentCapacity} гостей нужно минимум ${currentCapacity} комнаты`);
+  } else if (currentRooms === 100 && currentCapacity !== 0) {
+    element.setCustomValidity(`Для "100 комнат" нужно выбрать "не для гостей"`);
+  } else if (currentRooms !== 100 && currentCapacity === 0) {
+    element.setCustomValidity(`Не для гостей нужно выбрать 100 комнат`);
+  } else {
+    element.setCustomValidity(``);
+  }
+
+  element.reportValidity();
+};
+
+// Обработчик на изменение опции в селекте комнаты
+const onSelectRoomsChange = function () {
+  roomsNumber.addEventListener(`change`, function () {
+    validateRoomsCapacity(roomsNumber);
+  });
+};
+
+// Обработчик на изменение опции в селекте количество мест
+const onSelectCapacityChange = function () {
+  roomsCapacity.addEventListener(`change`, function () {
+    validateRoomsCapacity(roomsCapacity);
+  });
+};
+
+
+// Все операции при активации страницы
+const activatePage = function () {
+  disablePage(false);
+  inputAdress.value = getLocationActivePin();
+  onSelectRoomsChange();
+  onSelectCapacityChange();
+
+  // Вызываем функцию создания массива объявлений
+  const ads = getAds();
+  // Вызываем функцию создания объявлений на карте
+  renderChildren(mapAds, ads, renderAdOnMap);
+  // Вызываем функцию создания карточки
+  renderCardOnMap(ads[0]);
+};
+
+
+// Обработчик на пин активации при клике ЛКМ
+mainPin.addEventListener(`mousedown`, function (evt) {
+  if (evt.button === 0) {
+    activatePage();
+  }
+});
+
+// Обработчик на пин активации при нажатии Enter
+mainPin.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    activatePage();
+  }
+});
