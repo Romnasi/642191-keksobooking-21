@@ -50,17 +50,18 @@ const Pin = {
   HEIGHT: 70,
 };
 
-// X = 62 / 2 = 31, где 62 - ширина метки, 2 - пропорция: по ТЗ - нужна координата середины метки
+// X = 62 , где 62 - ширина метки, 2 - пропорция: по ТЗ - нужна координата середины метки
 // Y = 62 + 22 - 6 = 78, где 62 - высота метки, 22 - высота основания метки, 6 - смещение вверх основания метки
-const ActivePinOffset = {
-  X: 31,
-  Y: 78
+const ActiveMainPin = {
+  WIDTH: 62,
+  HEIGHT: 78,
+  PROPORTION: 2
 };
 
 const DisabledMainPin = {
   WIDTH: 65,
   HEIGHT: 65,
-  PROPORTION_CENTER: 2
+  PROPORTION: 2
 };
 
 const NUMBER_OF_ADS = 8;
@@ -81,15 +82,12 @@ const mainPin = map.querySelector(`.map__pin--main`);
 
 // Формы
 const adForm = document.querySelector(`.ad-form`);
-const adFormFieldsets = adForm.querySelectorAll(`fieldset`);
-
 const roomsNumber = adForm.querySelector(`#room_number`);
 const roomsCapacity = adForm.querySelector(`#capacity`);
+const inputAdress = document.querySelector(`#address`);
 
 // Фильтры
-const mapFilters = document.querySelector(`.map__filters`).querySelectorAll(`select`);
-
-const inputAdress = document.querySelector(`#address`);
+const mapFilters = document.querySelector(`.map__filters`);
 
 // Используем шаблоны
 const pinTemplate = document.querySelector(`#pin`)
@@ -310,35 +308,24 @@ const renderCardOnMap = function (ad) {
   map.insertBefore(renderCard(ad), filtersContainer);
 };
 
+// Воруем метод forEach у массива с помощью call
+const forEach = function (elements, cb) {
+  return Array.prototype.forEach.call(elements, cb);
+};
 
-// Состояние филдсетов в форме
-const disableFieldsets = function (isDisabled) {
-  adFormFieldsets.forEach(function (fieldset) {
-    fieldset.disabled = isDisabled;
+// Изменить состояние элементов в форме
+const changeFormState = function (form, isDisabled) {
+  forEach(form.elements, function (formElement) {
+    formElement.disabled = isDisabled;
   });
 };
 
-// Состояние селектов в форме
-const disableSelects = function (isDisabled) {
-  mapFilters.forEach(function (select) {
-    select.disabled = isDisabled;
-  });
-};
-
-const getLocationDisabledPin = function () {
+// Получаем координаты главной метки
+const getLocationMainPin = function (width, height, proportion) {
   const pinX = parseInt(mainPin.style.left, 10);
   const pinY = parseInt(mainPin.style.top, 10);
-  const locationX = pinX + Math.ceil(DisabledMainPin.WIDTH / DisabledMainPin.PROPORTION_CENTER);
-  const locationY = pinY + Math.ceil(DisabledMainPin.HEIGHT / DisabledMainPin.PROPORTION_CENTER);
-
-  return `${locationX}, ${locationY}`;
-};
-
-const getLocationActivePin = function () {
-  const pinX = parseInt(mainPin.style.left, 10);
-  const pinY = parseInt(mainPin.style.top, 10);
-  const locationX = pinX + ActivePinOffset.X;
-  const locationY = pinY + ActivePinOffset.Y;
+  const locationX = pinX + Math.ceil(width / proportion);
+  const locationY = pinY + Math.ceil(height / proportion);
 
   return `${locationX}, ${locationY}`;
 };
@@ -353,10 +340,10 @@ const disablePage = function (isDisabled) {
     adForm.classList.remove(`ad-form--disabled`);
   }
 
-  disableFieldsets(isDisabled);
-  disableSelects(isDisabled);
+  changeFormState(adForm, isDisabled);
+  changeFormState(mapFilters, isDisabled);
 
-  inputAdress.value = getLocationDisabledPin();
+  inputAdress.value = getLocationMainPin(DisabledMainPin.WIDTH, DisabledMainPin.HEIGHT, DisabledMainPin.PROPORTION);
 };
 
 disablePage(true);
@@ -382,27 +369,35 @@ const validateRoomsCapacity = function (element) {
   element.reportValidity();
 };
 
-// Обработчик на изменение опции в селекте комнаты
-const onSelectRoomsChange = function () {
-  roomsNumber.addEventListener(`change`, function () {
-    validateRoomsCapacity(roomsNumber);
-  });
-};
 
+//  Обработчик на изменение опции в селекте комнаты
+const onSelectRoomsChange = function () {
+  validateRoomsCapacity(roomsNumber);
+};
 // Обработчик на изменение опции в селекте количество мест
 const onSelectCapacityChange = function () {
-  roomsCapacity.addEventListener(`change`, function () {
-    validateRoomsCapacity(roomsCapacity);
-  });
+  validateRoomsCapacity(roomsCapacity);
+};
+
+
+// Состояние обработчиков на форме
+const onFormChange = function (on) {
+  if (on) {
+    roomsNumber.addEventListener(`change`, onSelectRoomsChange);
+    roomsCapacity.addEventListener(`change`, onSelectCapacityChange);
+  } else {
+    roomsNumber.removeEventListener(`change`, onSelectRoomsChange);
+    roomsCapacity.removeEventListener(`change`, onSelectCapacityChange);
+  }
 };
 
 
 // Все операции при активации страницы
 const activatePage = function () {
   disablePage(false);
-  inputAdress.value = getLocationActivePin();
-  onSelectRoomsChange();
-  onSelectCapacityChange();
+  inputAdress.value = getLocationMainPin(ActiveMainPin.WIDTH, ActiveMainPin.HEIGHT, ActiveMainPin.PROPORTION);
+
+  onFormChange(true);
 
   // Вызываем функцию создания массива объявлений
   const ads = getAds();
