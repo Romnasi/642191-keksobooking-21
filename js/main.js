@@ -50,6 +50,11 @@ const Pin = {
   HEIGHT: 70,
 };
 
+const EventTrigger = {
+  MAIN_MOUSE_BUTTON: 0,
+  KEY_ENTER: `Enter`
+};
+
 // X = 62 , где 62 - ширина метки, 2 - пропорция: по ТЗ - нужна координата середины метки
 // Y = 62 + 22 - 6 = 78, где 62 - высота метки, 22 - высота основания метки, 6 - смещение вверх основания метки
 const ActiveMainPin = {
@@ -82,9 +87,9 @@ const mainPin = map.querySelector(`.map__pin--main`);
 
 // Формы
 const adForm = document.querySelector(`.ad-form`);
-const roomsNumber = adForm.querySelector(`#room_number`);
-const roomsCapacity = adForm.querySelector(`#capacity`);
-const inputAdress = document.querySelector(`#address`);
+const roomsNumber = adForm.elements.room_number;
+const roomsCapacity = adForm.elements.capacity;
+const inputAdress = adForm.elements.address;
 
 // Фильтры
 const mapFilters = document.querySelector(`.map__filters`);
@@ -194,6 +199,14 @@ const getAds = function () {
 };
 
 
+const removeCard = function () {
+  const card = document.querySelector(`.popup`);
+  if (card) {
+    card.remove();
+  }
+};
+
+
 // Создаем пин объявления
 const renderAdOnMap = function (ad) {
   const pinElement = pinTemplate.cloneNode(true);
@@ -204,6 +217,18 @@ const renderAdOnMap = function (ad) {
   const avatarElement = pinElement.querySelector(`img`);
   avatarElement.src = ad.author.avatar;
   avatarElement.alt = ad.offer.title;
+
+  pinElement.addEventListener(`click`, function () {
+    removeCard();
+    renderCardOnMap(ad);
+  });
+
+  pinElement.addEventListener(`keydown`, function (evt) {
+    if (evt.key === EventTrigger.KEY_ENTER) {
+      removeCard();
+      renderCardOnMap(ad);
+    }
+  });
 
   return pinElement;
 };
@@ -252,6 +277,16 @@ const renderChildren = function (parentNode, elements, renderChild, clear = remo
 };
 
 
+const onCloseButtonClick = function () {
+  removeCard();
+};
+
+const onCloseButtonPress = function (evt) {
+  if (evt.key === EventTrigger.KEY_ENTER) {
+    removeCard();
+  }
+};
+
 // Создаем карточку объявления
 const renderCard = function (ad) {
   const cardElement = cardTemplate.cloneNode(true);
@@ -298,6 +333,12 @@ const renderCard = function (ad) {
   );
 
   cardAvatar.src = ad.author.avatar;
+
+  // Обработчики на кнопку закрытия
+  const closeButton = cardElement.querySelector(`.popup__close`);
+
+  closeButton.addEventListener(`click`, onCloseButtonClick);
+  closeButton.addEventListener(`keydown`, onCloseButtonPress);
 
   return cardElement;
 };
@@ -401,23 +442,22 @@ const activatePage = function () {
 
   // Вызываем функцию создания массива объявлений
   const ads = getAds();
+
   // Вызываем функцию создания объявлений на карте
   renderChildren(mapAds, ads, renderAdOnMap);
-  // Вызываем функцию создания карточки
-  renderCardOnMap(ads[0]);
 };
 
 
 // Обработчик на пин активации при клике ЛКМ
 mainPin.addEventListener(`mousedown`, function (evt) {
-  if (evt.button === 0) {
+  if (evt.button === EventTrigger.MAIN_MOUSE_BUTTON) {
     activatePage();
   }
 });
 
 // Обработчик на пин активации при нажатии Enter
 mainPin.addEventListener(`keydown`, function (evt) {
-  if (evt.key === `Enter`) {
+  if (evt.key === EventTrigger.KEY_ENTER) {
     activatePage();
   }
 });
