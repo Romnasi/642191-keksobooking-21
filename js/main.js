@@ -55,6 +55,11 @@ const EventTrigger = {
   KEY_ENTER: `Enter`
 };
 
+const Form = {
+  MIN_LENGTH_TITLE: 30,
+  MAX_LENGTH_TITLE: 100
+};
+
 // X = 62 , где 62 - ширина метки, 2 - пропорция: по ТЗ - нужна координата середины метки
 // Y = 62 + 22 - 6 = 78, где 62 - высота метки, 22 - высота основания метки, 6 - смещение вверх основания метки
 const ActiveMainPin = {
@@ -71,11 +76,18 @@ const DisabledMainPin = {
 
 const NUMBER_OF_ADS = 8;
 
-const types = {
-  flat: `Квартира`,
+const Types = {
   bungalow: `Бунгало`,
-  palace: `Дворец`,
-  house: `Дом`
+  flat: `Квартира`,
+  house: `Дом`,
+  palace: `Дворец`
+};
+
+const MinPriceByType = {
+  bungalow: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
 };
 
 const map = document.querySelector(`.map`);
@@ -90,6 +102,12 @@ const adForm = document.querySelector(`.ad-form`);
 const roomsNumber = adForm.elements.room_number;
 const roomsCapacity = adForm.elements.capacity;
 const inputAdress = adForm.elements.address;
+const inputTitle = adForm.elements.title;
+const selectType = adForm.elements.type;
+const inputPrice = adForm.elements.price;
+const selectTimeIn = adForm.elements.timein;
+const selectTimeOut = adForm.elements.timeout;
+
 
 // Фильтры
 const mapFilters = document.querySelector(`.map__filters`);
@@ -306,7 +324,7 @@ const renderCard = function (ad) {
     cardPrice.textContent = `${ad.offer.price}₽/ночь`;
   }
   if (ad.offer.type) {
-    cardType.textContent = types[ad.offer.type];
+    cardType.textContent = Types[ad.offer.type];
   }
   if (ad.offer.rooms) {
     cardCapacity.textContent = `${ad.offer.rooms} комнаты для ${ad.offer.guests} гостей`;
@@ -390,8 +408,45 @@ const disablePage = function (isDisabled) {
 disablePage(true);
 
 
-// Валидация форм
+// Валидация формы
 
+// Поле "Заголовок объявления"
+const validateTitle = function () {
+  const valueLength = inputTitle.value.length;
+
+  if (valueLength < Form.MIN_LENGTH_TITLE) {
+    inputTitle.setCustomValidity(`Минимальная длина заголовка - 30 символов. Осталось еще ${Form.MIN_LENGTH_TITLE - valueLength} симв.`);
+  } else if (valueLength > Form.MAX_LENGTH_TITLE) {
+    inputTitle.setCustomValidity(`Максимальная длина заголовка - 100 символов. Удалите лишние ${valueLength - Form.MAX_LENGTH_TITLE} симв.`);
+  } else {
+    inputTitle.setCustomValidity(``);
+  }
+
+  inputTitle.reportValidity();
+};
+
+
+// Поле «Тип жилья» влияет на минимальное значение поля «Цена за ночь
+const validatePriceByType = function () {
+  let type = selectType.value;
+
+  if (type) {
+    inputPrice.min = MinPriceByType[type];
+    inputPrice.placeholder = MinPriceByType[type];
+  }
+};
+
+
+const validateTimeInOut = function (isTimeIn) {
+  if (isTimeIn) {
+    selectTimeOut.value = selectTimeIn.value;
+  } else {
+    selectTimeIn.value = selectTimeOut.value;
+  }
+};
+
+
+// Поля "Количество комнат" - "Количество мест"
 // Синхронизация полей Количество комнат - количество мест
 const validateRoomsCapacity = function (element) {
   const currentRooms = parseInt(roomsNumber.value, 10);
@@ -411,6 +466,22 @@ const validateRoomsCapacity = function (element) {
 };
 
 
+const onInputTitleInput = function () {
+  validateTitle();
+};
+
+const onSelectTypeChange = function () {
+  validatePriceByType();
+};
+
+const onSelectTimeInChange = function () {
+  validateTimeInOut(true);
+};
+
+const onSelectTimeOutChange = function () {
+  validateTimeInOut(false);
+};
+
 //  Обработчик на изменение опции в селекте комнаты
 const onSelectRoomsChange = function () {
   validateRoomsCapacity(roomsNumber);
@@ -424,9 +495,17 @@ const onSelectCapacityChange = function () {
 // Состояние обработчиков на форме
 const onFormChange = function (on) {
   if (on) {
+    selectTimeIn.addEventListener(`change`, onSelectTimeInChange);
+    selectTimeOut.addEventListener(`change`, onSelectTimeOutChange);
+    selectType.addEventListener(`change`, onSelectTypeChange);
+    inputTitle.addEventListener(`input`, onInputTitleInput);
     roomsNumber.addEventListener(`change`, onSelectRoomsChange);
     roomsCapacity.addEventListener(`change`, onSelectCapacityChange);
   } else {
+    selectTimeIn.removeEventListener(`change`, onSelectTimeInChange);
+    selectTimeOut.removeEventListener(`change`, onSelectTimeOutChange);
+    selectType.removeEventListener(`change`, onSelectTypeChange);
+    inputTitle.removeEventListener(`input`, onInputTitleInput);
     roomsNumber.removeEventListener(`change`, onSelectRoomsChange);
     roomsCapacity.removeEventListener(`change`, onSelectCapacityChange);
   }
