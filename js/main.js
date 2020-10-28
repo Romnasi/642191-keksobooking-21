@@ -224,7 +224,6 @@ const removeCard = function () {
   }
 };
 
-
 // Создаем пин объявления
 const renderAdOnMap = function (ad) {
   const pinElement = pinTemplate.cloneNode(true);
@@ -257,6 +256,16 @@ const removeChildren = function (element) {
   while (element.firstChild) {
     element.firstChild.remove();
   }
+};
+
+// Удаляем пины
+const removePins = function () {
+  const pins = document.querySelectorAll(`.map__pin`);
+  pins.forEach(function(pin) {
+    if (pin !== mainPin) {
+      pin.remove();
+    }
+  });
 };
 
 
@@ -523,7 +532,7 @@ const activatePage = function () {
   const ads = getAds();
 
   // Вызываем функцию создания объявлений на карте
-  renderChildren(mapAds, ads, renderAdOnMap);
+  renderChildren(mapAds, ads, renderAdOnMap, removePins);
 };
 
 
