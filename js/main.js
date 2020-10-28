@@ -261,7 +261,7 @@ const removeChildren = function (element) {
 // Удаляем пины
 const removePins = function () {
   const pins = document.querySelectorAll(`.map__pin`);
-  pins.forEach(function(pin) {
+  pins.forEach(function (pin) {
     if (pin !== mainPin) {
       pin.remove();
     }
