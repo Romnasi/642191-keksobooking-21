@@ -50,6 +50,16 @@ const Pin = {
   HEIGHT: 70,
 };
 
+const EventTrigger = {
+  MAIN_MOUSE_BUTTON: 0,
+  KEY_ENTER: `Enter`
+};
+
+const Form = {
+  MIN_LENGTH_TITLE: 30,
+  MAX_LENGTH_TITLE: 100
+};
+
 // X = 62 , где 62 - ширина метки, 2 - пропорция: по ТЗ - нужна координата середины метки
 // Y = 62 + 22 - 6 = 78, где 62 - высота метки, 22 - высота основания метки, 6 - смещение вверх основания метки
 const ActiveMainPin = {
@@ -66,11 +76,18 @@ const DisabledMainPin = {
 
 const NUMBER_OF_ADS = 8;
 
-const types = {
-  flat: `Квартира`,
+const Types = {
   bungalow: `Бунгало`,
-  palace: `Дворец`,
-  house: `Дом`
+  flat: `Квартира`,
+  house: `Дом`,
+  palace: `Дворец`
+};
+
+const MinPriceByType = {
+  bungalow: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
 };
 
 const map = document.querySelector(`.map`);
@@ -82,9 +99,15 @@ const mainPin = map.querySelector(`.map__pin--main`);
 
 // Формы
 const adForm = document.querySelector(`.ad-form`);
-const roomsNumber = adForm.querySelector(`#room_number`);
-const roomsCapacity = adForm.querySelector(`#capacity`);
-const inputAdress = document.querySelector(`#address`);
+const roomsNumber = adForm.elements.room_number;
+const roomsCapacity = adForm.elements.capacity;
+const inputAdress = adForm.elements.address;
+const inputTitle = adForm.elements.title;
+const selectType = adForm.elements.type;
+const inputPrice = adForm.elements.price;
+const selectTimeIn = adForm.elements.timein;
+const selectTimeOut = adForm.elements.timeout;
+
 
 // Фильтры
 const mapFilters = document.querySelector(`.map__filters`);
@@ -194,6 +217,13 @@ const getAds = function () {
 };
 
 
+const removeCard = function () {
+  const card = document.querySelector(`.popup`);
+  if (card) {
+    card.remove();
+  }
+};
+
 // Создаем пин объявления
 const renderAdOnMap = function (ad) {
   const pinElement = pinTemplate.cloneNode(true);
@@ -205,6 +235,18 @@ const renderAdOnMap = function (ad) {
   avatarElement.src = ad.author.avatar;
   avatarElement.alt = ad.offer.title;
 
+  pinElement.addEventListener(`click`, function () {
+    removeCard();
+    renderCardOnMap(ad);
+  });
+
+  pinElement.addEventListener(`keydown`, function (evt) {
+    if (evt.key === EventTrigger.KEY_ENTER) {
+      removeCard();
+      renderCardOnMap(ad);
+    }
+  });
+
   return pinElement;
 };
 
@@ -214,6 +256,16 @@ const removeChildren = function (element) {
   while (element.firstChild) {
     element.firstChild.remove();
   }
+};
+
+// Удаляем пины
+const removePins = function () {
+  const pins = document.querySelectorAll(`.map__pin`);
+  pins.forEach(function (pin) {
+    if (pin !== mainPin) {
+      pin.remove();
+    }
+  });
 };
 
 
@@ -252,6 +304,16 @@ const renderChildren = function (parentNode, elements, renderChild, clear = remo
 };
 
 
+const onCloseButtonClick = function () {
+  removeCard();
+};
+
+const onCloseButtonPress = function (evt) {
+  if (evt.key === EventTrigger.KEY_ENTER) {
+    removeCard();
+  }
+};
+
 // Создаем карточку объявления
 const renderCard = function (ad) {
   const cardElement = cardTemplate.cloneNode(true);
@@ -271,7 +333,7 @@ const renderCard = function (ad) {
     cardPrice.textContent = `${ad.offer.price}₽/ночь`;
   }
   if (ad.offer.type) {
-    cardType.textContent = types[ad.offer.type];
+    cardType.textContent = Types[ad.offer.type];
   }
   if (ad.offer.rooms) {
     cardCapacity.textContent = `${ad.offer.rooms} комнаты для ${ad.offer.guests} гостей`;
@@ -298,6 +360,12 @@ const renderCard = function (ad) {
   );
 
   cardAvatar.src = ad.author.avatar;
+
+  // Обработчики на кнопку закрытия
+  const closeButton = cardElement.querySelector(`.popup__close`);
+
+  closeButton.addEventListener(`click`, onCloseButtonClick);
+  closeButton.addEventListener(`keydown`, onCloseButtonPress);
 
   return cardElement;
 };
@@ -349,8 +417,45 @@ const disablePage = function (isDisabled) {
 disablePage(true);
 
 
-// Валидация форм
+// Валидация формы
 
+// Поле "Заголовок объявления"
+const validateTitle = function () {
+  const valueLength = inputTitle.value.length;
+
+  if (valueLength < Form.MIN_LENGTH_TITLE) {
+    inputTitle.setCustomValidity(`Минимальная длина заголовка - 30 символов. Осталось еще ${Form.MIN_LENGTH_TITLE - valueLength} симв.`);
+  } else if (valueLength > Form.MAX_LENGTH_TITLE) {
+    inputTitle.setCustomValidity(`Максимальная длина заголовка - 100 символов. Удалите лишние ${valueLength - Form.MAX_LENGTH_TITLE} симв.`);
+  } else {
+    inputTitle.setCustomValidity(``);
+  }
+
+  inputTitle.reportValidity();
+};
+
+
+// Поле «Тип жилья» влияет на минимальное значение поля «Цена за ночь
+const validatePriceByType = function () {
+  let type = selectType.value;
+
+  if (type) {
+    inputPrice.min = MinPriceByType[type];
+    inputPrice.placeholder = MinPriceByType[type];
+  }
+};
+
+
+const validateTimeInOut = function (isTimeIn) {
+  if (isTimeIn) {
+    selectTimeOut.value = selectTimeIn.value;
+  } else {
+    selectTimeIn.value = selectTimeOut.value;
+  }
+};
+
+
+// Поля "Количество комнат" - "Количество мест"
 // Синхронизация полей Количество комнат - количество мест
 const validateRoomsCapacity = function (element) {
   const currentRooms = parseInt(roomsNumber.value, 10);
@@ -370,6 +475,22 @@ const validateRoomsCapacity = function (element) {
 };
 
 
+const onInputTitleInput = function () {
+  validateTitle();
+};
+
+const onSelectTypeChange = function () {
+  validatePriceByType();
+};
+
+const onSelectTimeInChange = function () {
+  validateTimeInOut(true);
+};
+
+const onSelectTimeOutChange = function () {
+  validateTimeInOut(false);
+};
+
 //  Обработчик на изменение опции в селекте комнаты
 const onSelectRoomsChange = function () {
   validateRoomsCapacity(roomsNumber);
@@ -383,9 +504,17 @@ const onSelectCapacityChange = function () {
 // Состояние обработчиков на форме
 const onFormChange = function (on) {
   if (on) {
+    selectTimeIn.addEventListener(`change`, onSelectTimeInChange);
+    selectTimeOut.addEventListener(`change`, onSelectTimeOutChange);
+    selectType.addEventListener(`change`, onSelectTypeChange);
+    inputTitle.addEventListener(`input`, onInputTitleInput);
     roomsNumber.addEventListener(`change`, onSelectRoomsChange);
     roomsCapacity.addEventListener(`change`, onSelectCapacityChange);
   } else {
+    selectTimeIn.removeEventListener(`change`, onSelectTimeInChange);
+    selectTimeOut.removeEventListener(`change`, onSelectTimeOutChange);
+    selectType.removeEventListener(`change`, onSelectTypeChange);
+    inputTitle.removeEventListener(`input`, onInputTitleInput);
     roomsNumber.removeEventListener(`change`, onSelectRoomsChange);
     roomsCapacity.removeEventListener(`change`, onSelectCapacityChange);
   }
@@ -401,23 +530,22 @@ const activatePage = function () {
 
   // Вызываем функцию создания массива объявлений
   const ads = getAds();
+
   // Вызываем функцию создания объявлений на карте
-  renderChildren(mapAds, ads, renderAdOnMap);
-  // Вызываем функцию создания карточки
-  renderCardOnMap(ads[0]);
+  renderChildren(mapAds, ads, renderAdOnMap, removePins);
 };
 
 
 // Обработчик на пин активации при клике ЛКМ
 mainPin.addEventListener(`mousedown`, function (evt) {
-  if (evt.button === 0) {
+  if (evt.button === EventTrigger.MAIN_MOUSE_BUTTON) {
     activatePage();
   }
 });
 
 // Обработчик на пин активации при нажатии Enter
 mainPin.addEventListener(`keydown`, function (evt) {
-  if (evt.key === `Enter`) {
+  if (evt.key === EventTrigger.KEY_ENTER) {
     activatePage();
   }
 });
