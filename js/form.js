@@ -109,25 +109,27 @@
   };
 
 
-  window.form = {
-    // Состояние обработчиков на форме
-    onFormChange(on) {
-      if (on) {
-        selectTimeIn.addEventListener(`change`, onSelectTimeInChange);
-        selectTimeOut.addEventListener(`change`, onSelectTimeOutChange);
-        selectType.addEventListener(`change`, onSelectTypeChange);
-        inputTitle.addEventListener(`input`, onInputTitleInput);
-        roomsNumber.addEventListener(`change`, onSelectRoomsChange);
-        roomsCapacity.addEventListener(`change`, onSelectCapacityChange);
-      } else {
-        selectTimeIn.removeEventListener(`change`, onSelectTimeInChange);
-        selectTimeOut.removeEventListener(`change`, onSelectTimeOutChange);
-        selectType.removeEventListener(`change`, onSelectTypeChange);
-        inputTitle.removeEventListener(`input`, onInputTitleInput);
-        roomsNumber.removeEventListener(`change`, onSelectRoomsChange);
-        roomsCapacity.removeEventListener(`change`, onSelectCapacityChange);
-      }
+  const onFormChange = function (on) {
+    if (on) {
+      selectTimeIn.addEventListener(`change`, onSelectTimeInChange);
+      selectTimeOut.addEventListener(`change`, onSelectTimeOutChange);
+      selectType.addEventListener(`change`, onSelectTypeChange);
+      inputTitle.addEventListener(`input`, onInputTitleInput);
+      roomsNumber.addEventListener(`change`, onSelectRoomsChange);
+      roomsCapacity.addEventListener(`change`, onSelectCapacityChange);
+    } else {
+      selectTimeIn.removeEventListener(`change`, onSelectTimeInChange);
+      selectTimeOut.removeEventListener(`change`, onSelectTimeOutChange);
+      selectType.removeEventListener(`change`, onSelectTypeChange);
+      inputTitle.removeEventListener(`input`, onInputTitleInput);
+      roomsNumber.removeEventListener(`change`, onSelectRoomsChange);
+      roomsCapacity.removeEventListener(`change`, onSelectCapacityChange);
     }
+  };
+
+
+  window.form = {
+    onFormChange
   };
 
 })();

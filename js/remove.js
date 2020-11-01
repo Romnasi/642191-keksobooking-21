@@ -7,32 +7,37 @@
   // Метка активации
   const mainPin = map.querySelector(`.map__pin--main`);
 
-  window.remove = {
-    // Удаляем карточку
-    removeCard() {
-      const card = document.querySelector(`.popup`);
-      if (card) {
-        card.remove();
-      }
-    },
 
-    // Удаляем потомков у элемента
-    removeChildren(element) {
-      while (element.firstChild) {
-        element.firstChild.remove();
-      }
-    },
-
-    // Удаляем пины кроме главного
-    removePins() {
-      const pins = document.querySelectorAll(`.map__pin`);
-      pins.forEach(function (pin) {
-        if (pin !== mainPin) {
-          pin.remove();
-        }
-      });
+  // Удаляем карточку
+  const removeCard = function () {
+    const card = document.querySelector(`.popup`);
+    if (card) {
+      card.remove();
     }
+  };
 
+  // Удаляем потомков у элемента
+  const removeChildren = function (element) {
+    while (element.firstChild) {
+      element.firstChild.remove();
+    }
+  };
+
+  // Удаляем пины кроме главного
+  const removePins = function () {
+    const pins = document.querySelectorAll(`.map__pin`);
+    pins.forEach(function (pin) {
+      if (pin !== mainPin) {
+        pin.remove();
+      }
+    });
+  };
+
+
+  window.remove = {
+    removeCard,
+    removeChildren,
+    removePins
   };
 
 })();

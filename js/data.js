@@ -115,39 +115,44 @@
   };
 
 
-  window.data = {
-    // Генерирует массив с данными объявлений
-    getAds() {
-      const ads = [];
+  // Генерирует массив с данными объявлений
+  const getAds = function () {
+    const ads = [];
 
-      for (let i = 0; i < NUMBER_OF_ADS; i++) {
-        const location = getAdLocation();
-        const similarAd = {
-          author: getAdAuthor(i),
-          offer: getAdOffer(location),
-          location
-        };
-        ads.push(similarAd);
-      }
-      return ads;
-    },
-
-    createOfferFeature(element) {
-      const childElement = document.createElement(`li`);
-      childElement.classList.add(`popup__feature`, `popup__feature--${element}`);
-      return childElement;
-    },
-
-    createOfferImg(element) {
-      const childElement = document.createElement(`img`);
-      childElement.src = element;
-      childElement.classList.add(`popup__photo`);
-      childElement.width = Offer.PHOTO_WIDTH;
-      childElement.height = Offer.PHOTO_HEIGHT;
-      childElement.alt = Offer.PHOTO_ALT;
-
-      return childElement;
+    for (let i = 0; i < NUMBER_OF_ADS; i++) {
+      const location = getAdLocation();
+      const similarAd = {
+        author: getAdAuthor(i),
+        offer: getAdOffer(location),
+        location
+      };
+      ads.push(similarAd);
     }
+    return ads;
+  };
+
+  const createOfferFeature = function (element) {
+    const childElement = document.createElement(`li`);
+    childElement.classList.add(`popup__feature`, `popup__feature--${element}`);
+    return childElement;
+  };
+
+  const createOfferImg = function (element) {
+    const childElement = document.createElement(`img`);
+    childElement.src = element;
+    childElement.classList.add(`popup__photo`);
+    childElement.width = Offer.PHOTO_WIDTH;
+    childElement.height = Offer.PHOTO_HEIGHT;
+    childElement.alt = Offer.PHOTO_ALT;
+
+    return childElement;
+  };
+
+
+  window.data = {
+    getAds,
+    createOfferFeature,
+    createOfferImg
   };
 
 })();
