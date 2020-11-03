@@ -4,13 +4,7 @@
 (function () {
 
   const map = document.querySelector(`.map`);
-  // X = 62 , где 62 - ширина метки, 2 - пропорция: по ТЗ - нужна координата середины метки
-  // Y = 62 + 22 - 6 = 78, где 62 - высота метки, 22 - высота основания метки, 6 - смещение вверх основания метки
-  const ActiveMainPin = {
-    WIDTH: 62,
-    HEIGHT: 78,
-    PROPORTION: 2
-  };
+
 
   const DisabledMainPin = {
     WIDTH: 65,
@@ -65,7 +59,7 @@
   // Все операции при активации страницы
   const activatePage = function () {
     disablePage(false);
-    inputAddress.value = getLocationMainPin(ActiveMainPin.WIDTH, ActiveMainPin.HEIGHT, ActiveMainPin.PROPORTION);
+    // inputAddress.value = getLocationMainPin(ActiveMainPin.WIDTH, ActiveMainPin.HEIGHT, ActiveMainPin.PROPORTION);
 
     window.form.onFormChange(true);
 
