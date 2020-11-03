@@ -38,8 +38,8 @@
     return `${locationX}, ${locationY}`;
   };
 
-
-  const calculationOfCoord = function (currentCoordX, currentCoordY) {
+  // Записываем координаты в стили и в поле Адрес
+  const writeCoord = function (currentCoordX, currentCoordY) {
     mainPin.style.left = currentCoordX + `px`;
     mainPin.style.top = currentCoordY + `px`;
 
@@ -53,6 +53,8 @@
     );
   };
 
+
+  // Добавляем обработчик на главный пин
   mainPin.addEventListener(`mousedown`, function (evt) {
     evt.preventDefault();
 
@@ -61,24 +63,19 @@
       y: evt.clientY
     };
 
-    let dragged = false;
-
-
-    const onMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
-
-      dragged = true;
+    // Получаем координаты
+    const getCoords = function (typeEvt) {
+      typeEvt.preventDefault();
 
       const shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
+        x: startCoords.x - typeEvt.clientX,
+        y: startCoords.y - typeEvt.clientY
       };
 
       startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
+        x: typeEvt.clientX,
+        y: typeEvt.clientY
       };
-
 
       // Координаты главной метки по горизонтали
       let currentCoordX = mainPin.offsetLeft - shift.x;
@@ -98,35 +95,19 @@
         currentCoordY = MapSize.MAX_HEIGHT;
       }
 
-      calculationOfCoord(currentCoordX, currentCoordY);
+      writeCoord(currentCoordX, currentCoordY);
     };
 
 
+    // Добавляем обработчик передвижения мыши на главный пин
+    const onMouseMove = function (moveEvt) {
+      getCoords(moveEvt);
+    };
+
+
+    // Добавляем обработчик отпускания мыши на главный пин
     const onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
-
-      const shift = {
-        x: startCoords.x - upEvt.clientX,
-        y: startCoords.y - upEvt.clientY
-      };
-
-      startCoords = {
-        x: upEvt.clientX,
-        y: upEvt.clientY
-      };
-
-      const currentCoordX = mainPin.offsetLeft - shift.x;
-      const currentCoordY = mainPin.offsetTop - shift.y;
-
-      calculationOfCoord(currentCoordX, currentCoordY);
-
-      if (dragged) {
-        const onClickPreventDefault = function (clickEvt) {
-          clickEvt.preventDefault();
-          mainPin.removeEventListener(`click`, onClickPreventDefault);
-        };
-        mainPin.addEventListener(`click`, onClickPreventDefault);
-      }
+      getCoords(upEvt);
 
       document.removeEventListener(`mousemove`, onMouseMove);
       document.removeEventListener(`mouseup`, onMouseUp);
@@ -135,7 +116,6 @@
 
     document.addEventListener(`mousemove`, onMouseMove);
     document.addEventListener(`mouseup`, onMouseUp);
-
   });
 
 })();
