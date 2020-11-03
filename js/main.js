@@ -59,7 +59,6 @@
   // Все операции при активации страницы
   const activatePage = function () {
     disablePage(false);
-    // inputAddress.value = getLocationMainPin(ActiveMainPin.WIDTH, ActiveMainPin.HEIGHT, ActiveMainPin.PROPORTION);
 
     window.form.onFormChange(true);
 
