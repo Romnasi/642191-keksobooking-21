@@ -12,9 +12,22 @@
     PROPORTION: 2
   };
 
+  const MapSize = {
+    MIN_WIDTH: 0,
+    MAX_WIDTH: 1200,
+    MIN_HEIGHT: 130,
+    MAX_HEIGHT: 630,
+  };
+
+
   const mainPin = document.querySelector(`.map__pin--main`);
   const adForm = document.querySelector(`.ad-form`);
   const inputAddress = adForm.elements.address;
+
+
+  // Ограничения координат по горизонтали
+  const coordinateBorderMinX = MapSize.MIN_WIDTH - (ActiveMainPin.WIDTH / ActiveMainPin.PROPORTION);
+  const coordinateBorderMaxX = MapSize.MAX_WIDTH - (ActiveMainPin.WIDTH / ActiveMainPin.PROPORTION);
 
 
   // Получаем координат острого края активной метки
@@ -66,8 +79,24 @@
         y: moveEvt.clientY
       };
 
-      const currentCoordX = mainPin.offsetLeft - shift.x;
-      const currentCoordY = mainPin.offsetTop - shift.y;
+
+      // Координаты главной метки по горизонтали
+      let currentCoordX = mainPin.offsetLeft - shift.x;
+
+      if (currentCoordX < coordinateBorderMinX) {
+        currentCoordX = coordinateBorderMinX;
+      } else if (currentCoordX > coordinateBorderMaxX) {
+        currentCoordX = coordinateBorderMaxX;
+      }
+
+      // Координаты главной метки по по вертикали
+      let currentCoordY = mainPin.offsetTop - shift.y;
+
+      if (currentCoordY < MapSize.MIN_HEIGHT) {
+        currentCoordY = MapSize.MIN_HEIGHT;
+      } else if (currentCoordY > MapSize.MAX_HEIGHT) {
+        currentCoordY = MapSize.MAX_HEIGHT;
+      }
 
       calculationOfCoord(currentCoordX, currentCoordY);
     };
