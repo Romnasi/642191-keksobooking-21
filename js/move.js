@@ -33,7 +33,7 @@
   // Получаем координат острого края активной метки
   const getLocationActiveMainPin = function (coordX, coordY, widthPin, heightPin, proportion) {
     const locationX = coordX + Math.ceil(widthPin / proportion);
-    const locationY = coordY + heightPin;
+    const locationY = coordY;
 
     return `${locationX}, ${locationY}`;
   };
@@ -65,7 +65,6 @@
 
     // Получаем координаты
     const getCoords = function (typeEvt) {
-      typeEvt.preventDefault();
 
       const shift = {
         x: startCoords.x - typeEvt.clientX,
@@ -101,12 +100,14 @@
 
     // Добавляем обработчик передвижения мыши на главный пин
     const onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
       getCoords(moveEvt);
     };
 
 
     // Добавляем обработчик отпускания мыши на главный пин
     const onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
       getCoords(upEvt);
 
       document.removeEventListener(`mousemove`, onMouseMove);

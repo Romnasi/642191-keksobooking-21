@@ -67,6 +67,9 @@
 
     // Вызываем функцию создания объявлений на карте
     window.util.renderChildren(mapAds, ads, window.map.renderPinOnMap, window.remove.removePins);
+
+    mainPin.removeEventListener(`mousedown`, onMainPinClick);
+    mainPin.removeEventListener(`keydown`, onMainPinPress);
   };
 
   // Обработчик на пин активации при клике ЛКМ
