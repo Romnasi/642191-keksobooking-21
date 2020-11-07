@@ -4,72 +4,44 @@
 (function () {
 
   const map = document.querySelector(`.map`);
-
-
-  const DisabledMainPin = {
-    WIDTH: 65,
-    HEIGHT: 65,
-    PROPORTION: 2
-  };
-
-
   const mapAds = map.querySelector(`.map__pins`);
-  const adForm = document.querySelector(`.ad-form`);
-  const inputAddress = adForm.elements.address;
-  const mapFilters = document.querySelector(`.map__filters`);
   const mainPin = map.querySelector(`.map__pin--main`);
 
 
-  // Изменить состояние элементов в форме
-  const changeFormState = function (form, isDisabled) {
-    window.util.forEach(form.elements, function (formElement) {
-      formElement.disabled = isDisabled;
-    });
-  };
-
-  // Получаем координаты главной метки
-  const getLocationMainPin = function (width, height, proportion) {
-    const pinX = parseInt(mainPin.style.left, 10);
-    const pinY = parseInt(mainPin.style.top, 10);
-    const locationX = pinX + Math.ceil(width / proportion);
-    const locationY = pinY + Math.ceil(height / proportion);
-
-    return `${locationX}, ${locationY}`;
-  };
-
-  // Неактивное состояние страницы
-  const disablePage = function (isDisabled) {
-    if (isDisabled) {
-      map.classList.add(`map--faded`);
-      adForm.classList.add(`ad-form--disabled`);
-    } else {
-      map.classList.remove(`map--faded`);
-      adForm.classList.remove(`ad-form--disabled`);
-    }
-
-    changeFormState(adForm, isDisabled);
-    changeFormState(mapFilters, isDisabled);
-
-    inputAddress.value = getLocationMainPin(DisabledMainPin.WIDTH, DisabledMainPin.HEIGHT, DisabledMainPin.PROPORTION);
-  };
-
-  disablePage(true);
+  const errorTemplate = document.querySelector(`#error`)
+    .content
+    .querySelector(`.error`);
 
 
-  // Все операции при активации страницы
-  const activatePage = function () {
-    disablePage(false);
+  window.disable.disablePage(true);
 
-    window.form.onFormChange(true);
 
-    // Вызываем функцию создания массива объявлений
-    const ads = window.data.getAds();
-
-    // Вызываем функцию создания объявлений на карте
+  const successHandler = function (ads) {
     window.util.renderChildren(mapAds, ads, window.map.renderPinOnMap, window.remove.removePins);
+
+    window.disable.disablePage(false);
+    window.form.onFormChange(true);
 
     mainPin.removeEventListener(`mousedown`, onMainPinClick);
     mainPin.removeEventListener(`keydown`, onMainPinPress);
+  };
+
+
+  const errorHandler = function (errorMessage) {
+    const errorPopup = errorTemplate.cloneNode(true);
+    const errorMessageContainer = errorPopup.querySelector(`.error__message`);
+    errorPopup.style.position = `absolute`;
+    errorPopup.style.left = 0;
+    errorPopup.style.right = 0;
+    errorMessageContainer.textContent = errorMessage;
+    document.body.insertAdjacentElement(`afterbegin`, errorPopup);
+  };
+
+
+  // Активация страницы
+  const activatePage = function () {
+    // Запрос данных с сервера и отрисовка меток в случае успеха
+    window.sync.getData(successHandler, errorHandler);
   };
 
   // Обработчик на пин активации при клике ЛКМ

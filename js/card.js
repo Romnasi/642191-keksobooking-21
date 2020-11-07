@@ -28,6 +28,7 @@
     const cardElement = cardTemplate.cloneNode(true);
 
     const cardTitle = cardElement.querySelector(`.popup__title`);
+    const cardAddress = cardElement.querySelector(`.popup__text--address`);
     const cardPrice = cardElement.querySelector(`.popup__text--price`);
     const cardType = cardElement.querySelector(`.popup__type`);
     const cardCapacity = cardElement.querySelector(`.popup__text--capacity`);
@@ -37,6 +38,9 @@
 
     if (ad.offer.title) {
       cardTitle.textContent = ad.offer.title;
+    }
+    if (ad.offer.address) {
+      cardAddress.textContent = ad.offer.address;
     }
     if (ad.offer.price) {
       cardPrice.textContent = `${ad.offer.price}₽/ночь`;
