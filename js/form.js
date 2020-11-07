@@ -17,6 +17,8 @@
     palace: 10000
   };
 
+  const mainPin = document.querySelector(`.map__pin--main`);
+
   // Поля ввода
   const adForm = document.querySelector(`.ad-form`);
   const roomsNumber = adForm.elements.room_number;
@@ -153,10 +155,17 @@
     }
   };
 
-  adForm.addEventListener(`submit`, function (evt) {
+  const successSendDataHandler = function () {
     window.sync.sendData(new FormData(adForm), function () {
       window.disable.disablePage(true);
+
+      mainPin.addEventListener(`mousedown`, window.activate.onMainPinClick);
+      mainPin.addEventListener(`keydown`, window.activate.onMainPinPress);
     });
+  };
+
+  adForm.addEventListener(`submit`, function (evt) {
+    successSendDataHandler();
     evt.preventDefault();
   });
 

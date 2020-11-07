@@ -9,21 +9,26 @@
     OK: 200
   };
 
-
   const TIMEOUT_IN_MS = 1000;
 
-  // const request = function (URL, onSucces, onError, method = Methods.GET, data) {
+  // const request = function (data, onSucces, URL, method = Methods.GET) {
   //   const xhr = new XMLHttpRequest();
   //   xhr.responseType = `json`;
   //
   //   xhr.addEventListener(`load`, function () {
   //     onSucces(xhr.response);
   //   });
-  //   return xhr;
+  //
+  //   xhr.open(`POST`, URL);
+  //   xhr.send(data);
+  // };
+  //
+  //
+  // // Отправляем на сервер
+  // const sendData = function (data, onSucces) {
+  //   request(data, onSucces, sendURL);
   // };
 
-
-  // Отправляем на сервер
   const sendData = function (data, onSucces) {
     const xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
