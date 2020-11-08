@@ -1,7 +1,7 @@
 // card.js
 'use strict';
 
-(function () {
+(() => {
 
   const Types = {
     bungalow: `Бунгало`,
@@ -15,16 +15,16 @@
     .querySelector(`.map__card`);
 
 
-  const onCloseButtonClick = function () {
+  const onCloseButtonClick = () => {
     window.remove.removeCard();
   };
 
-  const onCloseButtonPress = function (evt) {
+  const onCloseButtonPress = (evt) => {
     window.util.isEnterEvent(evt, window.remove.removeCard);
   };
 
   // Создаем карточку объявления
-  const renderCard = function (ad) {
+  const renderCard = (ad) => {
     const cardElement = cardTemplate.cloneNode(true);
 
     const cardTitle = cardElement.querySelector(`.popup__title`);

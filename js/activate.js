@@ -1,7 +1,7 @@
 // activate.js
 'use strict';
 
-(function () {
+(() => {
   const map = document.querySelector(`.map`);
   const mapAds = map.querySelector(`.map__pins`);
   const mainPin = map.querySelector(`.map__pin--main`);
@@ -12,7 +12,7 @@
     .querySelector(`.error`);
 
 
-  const successHandler = function (ads) {
+  const successHandler = (ads) => {
     window.util.renderChildren(mapAds, ads, window.map.renderPinOnMap, window.remove.removePins);
 
     window.disable.disablePage(false);
@@ -26,7 +26,7 @@
 
 
   // Удаляем попап с ошибкой
-  const removeErrorPopup = function () {
+  const removeErrorPopup = () => {
     const errorPopup = document.querySelector(`.error`);
     if (errorPopup) {
       errorPopup.remove();
@@ -34,18 +34,18 @@
   };
 
 
-  const onErrorButtonClick = function (evt) {
+  const onErrorButtonClick = (evt) => {
     removeErrorPopup();
     onMainPinClick(evt);
   };
 
-  const onErrorButtonPress = function (evt) {
+  const onErrorButtonPress = (evt) => {
     removeErrorPopup();
     onMainPinPress(evt);
   };
 
 
-  const errorHandler = function (errorMessage) {
+  const errorHandler = (errorMessage) => {
     const errorPopup = errorTemplate.cloneNode(true);
     const errorMessageContainer = errorPopup.querySelector(`.error__message`);
     const errorButton = errorPopup.querySelector(`.error__button`);
@@ -70,19 +70,19 @@
   };
 
   // Активация страницы
-  const activatePage = function () {
+  const activatePage = () => {
     // Запрос данных с сервера и отрисовка меток в случае успеха
     // В случае ошибки вывод попапа с причиной ошибки
     window.sync.getData(successHandler, errorHandler);
   };
 
   // Обработчик на пин активации при клике ЛКМ
-  const onMainPinClick = function (evt) {
+  const onMainPinClick = (evt) => {
     window.util.isMainMouseButtonEvent(evt, activatePage);
   };
 
   // Обработчик на пин активации при нажатии Enter
-  const onMainPinPress = function (evt) {
+  const onMainPinPress = (evt) => {
     window.util.isEnterEvent(evt, activatePage);
   };
 

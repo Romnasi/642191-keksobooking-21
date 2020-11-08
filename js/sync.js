@@ -1,7 +1,7 @@
 // remove.js
 'use strict';
 
-(function () {
+(() => {
 
   const sendURL = `https://21.javascript.pages.academy/keksobooking`;
   const getURL = `https://21.javascript.pages.academy/keksobooking/data`;
@@ -18,7 +18,7 @@
 
 
   // Проверяем статус ответа сервера
-  const checkStatusCode = function (xhr, onSuccess, onError) {
+  const checkStatusCode = (xhr, onSuccess, onError) => {
     if (xhr.status === statusCode.OK) {
       onSuccess(xhr.response);
     } else {
@@ -28,26 +28,26 @@
 
 
   // Обработчик на ошибку соединения
-  const checkConnectError = function (xhr, onError) {
-    xhr.addEventListener(`error`, function () {
+  const checkConnectError = (xhr, onError) => {
+    xhr.addEventListener(`error`, () => {
       onError(`Произошла ошибка соединения`);
     });
   };
 
 
   // Обработчик на ошибку таймаута
-  const checkTimeoutError = function (xhr, onError) {
-    xhr.addEventListener(`timeout`, function () {
+  const checkTimeoutError = (xhr, onError) => {
+    xhr.addEventListener(`timeout`, () => {
       onError(`Запрос не успел выполниться за ` + xhr.timeout + `мс`);
     });
   };
 
 
-  const request = function (data, onSuccess, URL, method = Methods.GET, onError) {
+  const request = (data, onSuccess, URL, method = Methods.GET, onError) => {
     const xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
 
-    xhr.addEventListener(`load`, function () {
+    xhr.addEventListener(`load`, () => {
       if (method === Methods.GET) {
         checkStatusCode(xhr, onSuccess, onError);
       } else {
@@ -68,13 +68,13 @@
 
 
   // Отправляем на сервер
-  const sendData = function (data, onSuccess) {
+  const sendData = (data, onSuccess) => {
     request(data, onSuccess, sendURL, Methods.POST);
   };
 
 
   // Загружаем с сервера
-  const getData = function (onSuccess, onError) {
+  const getData = (onSuccess, onError) => {
     request(null, onSuccess, getURL, Methods.GET, onError);
   };
 

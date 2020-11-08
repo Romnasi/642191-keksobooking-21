@@ -2,7 +2,7 @@
 
 "use strict";
 
-(function () {
+(() => {
 
   // X = 62 , где 62 - ширина метки, 2 - пропорция: по ТЗ - нужна координата середины метки
   // Y = 62 + 22 - 6 = 78, где 62 - высота метки, 22 - высота основания метки, 6 - смещение вверх основания метки
@@ -31,7 +31,7 @@
 
 
   // Получаем координат острого края активной метки
-  const getLocationActiveMainPin = function (coordX, coordY, widthPin, heightPin, proportion) {
+  const getLocationActiveMainPin = (coordX, coordY, widthPin, heightPin, proportion) => {
     const locationX = coordX + Math.ceil(widthPin / proportion);
     const locationY = coordY + heightPin;
 
@@ -39,7 +39,7 @@
   };
 
   // Записываем координаты в стили и в поле Адрес
-  const writeCoord = function (currentCoordX, currentCoordY) {
+  const writeCoord = (currentCoordX, currentCoordY) => {
     mainPin.style.left = currentCoordX + `px`;
     mainPin.style.top = currentCoordY + `px`;
 
@@ -55,7 +55,7 @@
 
 
   // Добавляем обработчик на главный пин
-  mainPin.addEventListener(`mousedown`, function (evt) {
+  mainPin.addEventListener(`mousedown`, (evt) => {
     evt.preventDefault();
 
     let startCoords = {
@@ -64,7 +64,7 @@
     };
 
     // Получаем координаты
-    const getCoords = function (typeEvt) {
+    const getCoords = (typeEvt) => {
 
       const shift = {
         x: startCoords.x - typeEvt.clientX,
@@ -99,14 +99,14 @@
 
 
     // Добавляем обработчик передвижения мыши на главный пин
-    const onMouseMove = function (moveEvt) {
+    const onMouseMove = (moveEvt) => {
       moveEvt.preventDefault();
       getCoords(moveEvt);
     };
 
 
     // Добавляем обработчик отпускания мыши на главный пин
-    const onMouseUp = function (upEvt) {
+    const onMouseUp = (upEvt) => {
       upEvt.preventDefault();
       getCoords(upEvt);
 

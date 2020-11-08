@@ -1,7 +1,7 @@
 // form.js
 'use strict';
 
-(function () {
+(() => {
 
   // Валидация формы
 
@@ -31,7 +31,7 @@
 
 
   // Поле "Заголовок объявления"
-  const validateTitle = function () {
+  const validateTitle = () => {
     const valueLength = inputTitle.value.length;
 
     if (valueLength < Form.MIN_LENGTH_TITLE) {
@@ -47,7 +47,7 @@
 
 
   // Поле «Тип жилья» изменяет минимальное значение поля «Цена за ночь»
-  const validatePriceByType = function () {
+  const validatePriceByType = () => {
     const type = selectType.value;
     const minPrice = MinPriceByType[type];
 
@@ -58,7 +58,7 @@
   };
 
   // Поле «Цена за ночь» - валидация минимального значения
-  const validateMinPriceByType = function () {
+  const validateMinPriceByType = () => {
     const type = selectType.value;
     const minPrice = MinPriceByType[type];
     const currentPrice = inputPrice.value;
@@ -74,7 +74,7 @@
 
 
   // Поля «Время заезда» и «Время выезда» синхронизированы
-  const validateTimeInOut = function (isTimeIn) {
+  const validateTimeInOut = (isTimeIn) => {
     if (isTimeIn) {
       selectTimeOut.value = selectTimeIn.value;
     } else {
@@ -85,7 +85,7 @@
 
   // Поля "Количество комнат" - "Количество мест"
   // Синхронизация полей Количество комнат - количество мест
-  const validateRoomsCapacity = function (element) {
+  const validateRoomsCapacity = (element) => {
     const currentRooms = parseInt(roomsNumber.value, 10);
     const currentCapacity = parseInt(roomsCapacity.value, 10);
 
@@ -103,37 +103,37 @@
   };
 
 
-  const onInputTitleInput = function () {
+  const onInputTitleInput = () => {
     validateTitle();
   };
 
-  const onSelectTypeChange = function () {
+  const onSelectTypeChange = () => {
     validatePriceByType();
   };
 
-  const onInputPriceInput = function () {
+  const onInputPriceInput = () => {
     validateMinPriceByType();
   };
 
-  const onSelectTimeInChange = function () {
+  const onSelectTimeInChange = () => {
     validateTimeInOut(true);
   };
 
-  const onSelectTimeOutChange = function () {
+  const onSelectTimeOutChange = () => {
     validateTimeInOut(false);
   };
 
   //  Обработчик на изменение опции в селекте комнаты
-  const onSelectRoomsChange = function () {
+  const onSelectRoomsChange = () => {
     validateRoomsCapacity(roomsNumber);
   };
   // Обработчик на изменение опции в селекте количество мест
-  const onSelectCapacityChange = function () {
+  const onSelectCapacityChange = () => {
     validateRoomsCapacity(roomsCapacity);
   };
 
 
-  const onFormChange = function (on) {
+  const onFormChange = (on) => {
     if (on) {
       selectTimeIn.addEventListener(`change`, onSelectTimeInChange);
       selectTimeOut.addEventListener(`change`, onSelectTimeOutChange);
@@ -155,8 +155,8 @@
     }
   };
 
-  const successSendDataHandler = function () {
-    window.sync.sendData(new FormData(adForm), function () {
+  const successSendDataHandler = () => {
+    window.sync.sendData(new FormData(adForm), () => {
       window.disable.disablePage(true);
 
       mainPin.addEventListener(`mousedown`, window.activate.onMainPinClick);
@@ -164,7 +164,7 @@
     });
   };
 
-  adForm.addEventListener(`submit`, function (evt) {
+  adForm.addEventListener(`submit`, (evt) => {
     successSendDataHandler();
     evt.preventDefault();
   });

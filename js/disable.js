@@ -1,7 +1,7 @@
 // disable.js
 'use strict';
 
-(function () {
+(() => {
   const map = document.querySelector(`.map`);
   const mainPin = map.querySelector(`.map__pin--main`);
   const adForm = document.querySelector(`.ad-form`);
@@ -16,7 +16,7 @@
 
 
   // Получаем координаты главной метки
-  const getLocationMainPin = function (width, height, proportion) {
+  const getLocationMainPin = (width, height, proportion) => {
     const pinX = parseInt(mainPin.style.left, 10);
     const pinY = parseInt(mainPin.style.top, 10);
     const locationX = pinX + Math.ceil(width / proportion);
@@ -27,15 +27,15 @@
 
 
   // Изменить состояние элементов в форме
-  const changeFormState = function (form, isDisabled) {
-    window.util.forEach(form.elements, function (formElement) {
+  const changeFormState = (form, isDisabled) => {
+    window.util.forEach(form.elements, (formElement) => {
       formElement.disabled = isDisabled;
     });
   };
 
 
   // Неактивное состояние страницы
-  const disablePage = function (isDisabled) {
+  const disablePage = (isDisabled) => {
     if (isDisabled) {
       map.classList.add(`map--faded`);
       adForm.classList.add(`ad-form--disabled`);
