@@ -155,7 +155,7 @@
     }
   };
 
-  const successSendDataHandler = () => {
+  const onSuccessSendData = () => {
     window.sync.sendData(new FormData(adForm), () => {
       window.disable.disablePage(true);
 
@@ -165,7 +165,7 @@
   };
 
   adForm.addEventListener(`submit`, (evt) => {
-    successSendDataHandler();
+    onSuccessSendData();
     evt.preventDefault();
   });
 

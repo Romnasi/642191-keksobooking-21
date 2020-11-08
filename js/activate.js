@@ -12,7 +12,7 @@
     .querySelector(`.error`);
 
 
-  const successHandler = (ads) => {
+  const onSuccess = (ads) => {
     window.util.renderChildren(mapAds, ads, window.map.renderPinOnMap, window.remove.removePins);
 
     window.disable.disablePage(false);
@@ -45,7 +45,7 @@
   };
 
 
-  const errorHandler = (errorMessage) => {
+  const onError = (errorMessage) => {
     const errorPopup = errorTemplate.cloneNode(true);
     const errorMessageContainer = errorPopup.querySelector(`.error__message`);
     const errorButton = errorPopup.querySelector(`.error__button`);
@@ -73,7 +73,7 @@
   const activatePage = () => {
     // Запрос данных с сервера и отрисовка меток в случае успеха
     // В случае ошибки вывод попапа с причиной ошибки
-    window.sync.getData(successHandler, errorHandler);
+    window.sync.getData(onSuccess, onError);
   };
 
   // Обработчик на пин активации при клике ЛКМ

@@ -48,19 +48,14 @@
     xhr.responseType = `json`;
 
     xhr.addEventListener(`load`, () => {
-      if (method === Methods.GET) {
-        checkStatusCode(xhr, onSuccess, onError);
-      } else {
-        onSuccess(xhr.response);
-      }
+      checkStatusCode(xhr, onSuccess, onError);
+      onSuccess(xhr.response);
     });
 
-    if (method === Methods.GET) {
-      xhr.timeout = TIMEOUT_IN_MS;
+    xhr.timeout = TIMEOUT_IN_MS;
 
-      checkConnectError(xhr, onError);
-      checkTimeoutError(xhr, onError);
-    }
+    checkConnectError(xhr, onError);
+    checkTimeoutError(xhr, onError);
 
     xhr.open(method, URL);
     xhr.send(data);
