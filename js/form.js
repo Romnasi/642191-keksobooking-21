@@ -17,6 +17,8 @@
     palace: 10000
   };
 
+  const mainPin = document.querySelector(`.map__pin--main`);
+
   // Поля ввода
   const adForm = document.querySelector(`.ad-form`);
   const roomsNumber = adForm.elements.room_number;
@@ -26,6 +28,7 @@
   const inputPrice = adForm.elements.price;
   const selectTimeIn = adForm.elements.timein;
   const selectTimeOut = adForm.elements.timeout;
+
 
   // Поле "Заголовок объявления"
   const validateTitle = function () {
@@ -43,17 +46,34 @@
   };
 
 
-  // Поле «Тип жилья» влияет на минимальное значение поля «Цена за ночь
+  // Поле «Тип жилья» изменяет минимальное значение поля «Цена за ночь»
   const validatePriceByType = function () {
-    let type = selectType.value;
+    const type = selectType.value;
+    const minPrice = MinPriceByType[type];
 
     if (type) {
-      inputPrice.min = MinPriceByType[type];
-      inputPrice.placeholder = MinPriceByType[type];
+      inputPrice.min = minPrice;
+      inputPrice.placeholder = minPrice;
     }
   };
 
+  // Поле «Цена за ночь» - валидация минимального значения
+  const validateMinPriceByType = function () {
+    const type = selectType.value;
+    const minPrice = MinPriceByType[type];
+    const currentPrice = inputPrice.value;
 
+    if (currentPrice < minPrice) {
+      inputPrice.setCustomValidity(`Минимальная цена для типа жилья  ${selectType.options[selectType.selectedIndex].text} - ${minPrice} руб. за ночь. Увеличьте цену на ${minPrice - currentPrice} руб.`);
+    } else {
+      inputPrice.setCustomValidity(``);
+    }
+
+    inputPrice.reportValidity();
+  };
+
+
+  // Поля «Время заезда» и «Время выезда» синхронизированы
   const validateTimeInOut = function (isTimeIn) {
     if (isTimeIn) {
       selectTimeOut.value = selectTimeIn.value;
@@ -91,6 +111,10 @@
     validatePriceByType();
   };
 
+  const onInputPriceInput = function () {
+    validateMinPriceByType();
+  };
+
   const onSelectTimeInChange = function () {
     validateTimeInOut(true);
   };
@@ -114,6 +138,8 @@
       selectTimeIn.addEventListener(`change`, onSelectTimeInChange);
       selectTimeOut.addEventListener(`change`, onSelectTimeOutChange);
       selectType.addEventListener(`change`, onSelectTypeChange);
+      selectType.addEventListener(`change`, onInputPriceInput);
+      inputPrice.addEventListener(`input`, onInputPriceInput);
       inputTitle.addEventListener(`input`, onInputTitleInput);
       roomsNumber.addEventListener(`change`, onSelectRoomsChange);
       roomsCapacity.addEventListener(`change`, onSelectCapacityChange);
@@ -121,11 +147,27 @@
       selectTimeIn.removeEventListener(`change`, onSelectTimeInChange);
       selectTimeOut.removeEventListener(`change`, onSelectTimeOutChange);
       selectType.removeEventListener(`change`, onSelectTypeChange);
+      selectType.removeEventListener(`change`, onInputPriceInput);
+      inputPrice.removeEventListener(`input`, onInputPriceInput);
       inputTitle.removeEventListener(`input`, onInputTitleInput);
       roomsNumber.removeEventListener(`change`, onSelectRoomsChange);
       roomsCapacity.removeEventListener(`change`, onSelectCapacityChange);
     }
   };
+
+  const successSendDataHandler = function () {
+    window.sync.sendData(new FormData(adForm), function () {
+      window.disable.disablePage(true);
+
+      mainPin.addEventListener(`mousedown`, window.activate.onMainPinClick);
+      mainPin.addEventListener(`keydown`, window.activate.onMainPinPress);
+    });
+  };
+
+  adForm.addEventListener(`submit`, function (evt) {
+    successSendDataHandler();
+    evt.preventDefault();
+  });
 
 
   window.form = {

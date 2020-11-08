@@ -33,7 +33,7 @@
   // Получаем координат острого края активной метки
   const getLocationActiveMainPin = function (coordX, coordY, widthPin, heightPin, proportion) {
     const locationX = coordX + Math.ceil(widthPin / proportion);
-    const locationY = coordY;
+    const locationY = coordY + heightPin;
 
     return `${locationX}, ${locationY}`;
   };
@@ -88,10 +88,10 @@
       // Координаты главной метки по по вертикали
       let currentCoordY = mainPin.offsetTop - shift.y;
 
-      if (currentCoordY < MapSize.MIN_HEIGHT) {
-        currentCoordY = MapSize.MIN_HEIGHT;
-      } else if (currentCoordY > MapSize.MAX_HEIGHT) {
-        currentCoordY = MapSize.MAX_HEIGHT;
+      if (currentCoordY < MapSize.MIN_HEIGHT - ActiveMainPin.HEIGHT) {
+        currentCoordY = MapSize.MIN_HEIGHT - ActiveMainPin.HEIGHT;
+      } else if (currentCoordY > MapSize.MAX_HEIGHT - ActiveMainPin.HEIGHT) {
+        currentCoordY = MapSize.MAX_HEIGHT - ActiveMainPin.HEIGHT;
       }
 
       writeCoord(currentCoordX, currentCoordY);
