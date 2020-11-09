@@ -7,11 +7,6 @@
   const mainPin = map.querySelector(`.map__pin--main`);
 
 
-  const errorTemplate = document.querySelector(`#error`)
-    .content
-    .querySelector(`.error`);
-
-
   const onSuccess = (ads) => {
     window.util.renderChildren(mapAds, ads, window.map.renderPinOnMap, window.remove.removePins);
 
@@ -25,55 +20,11 @@
   };
 
 
-  // Удаляем попап с ошибкой
-  const removeErrorPopup = () => {
-    const errorPopup = document.querySelector(`.error`);
-    if (errorPopup) {
-      errorPopup.remove();
-    }
-  };
-
-
-  const onErrorButtonClick = (evt) => {
-    removeErrorPopup();
-    onMainPinClick(evt);
-  };
-
-  const onErrorButtonPress = (evt) => {
-    removeErrorPopup();
-    onMainPinPress(evt);
-  };
-
-
-  const onError = (errorMessage) => {
-    const errorPopup = errorTemplate.cloneNode(true);
-    const errorMessageContainer = errorPopup.querySelector(`.error__message`);
-    const errorButton = errorPopup.querySelector(`.error__button`);
-
-
-    errorPopup.style.position = `absolute`;
-    errorPopup.style.left = 0;
-    errorPopup.style.right = 0;
-    errorMessageContainer.textContent = errorMessage;
-
-    // Удаляем обработчики с главного пина
-    mainPin.removeEventListener(`mousedown`, onMainPinClick);
-    mainPin.removeEventListener(`keydown`, onMainPinPress);
-    mainPin.disabled = true;
-
-    // Устанавливаем обработчики на кнопку в попапе ошибки
-    errorButton.addEventListener(`mousedown`, onErrorButtonClick);
-    // errorButton.addEventListener(`mousedown`, window.activate.onMainPinClick);
-    errorButton.addEventListener(`keydown`, onErrorButtonPress);
-
-    document.body.insertAdjacentElement(`afterbegin`, errorPopup);
-  };
-
   // Активация страницы
   const activatePage = () => {
     // Запрос данных с сервера и отрисовка меток в случае успеха
     // В случае ошибки вывод попапа с причиной ошибки
-    window.sync.getData(onSuccess, onError);
+    window.sync.load(onSuccess);
   };
 
   // Обработчик на пин активации при клике ЛКМ

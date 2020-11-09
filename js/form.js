@@ -5,16 +5,18 @@
 
   // Валидация формы
 
-  const Form = {
-    MIN_LENGTH_TITLE: 30,
-    MAX_LENGTH_TITLE: 100
-  };
-
-  const MinPriceByType = {
+  // Это не перечисления
+  // Это объект для маппинга
+  const MIN_PRICE_BY_TYPE = {
     bungalow: 0,
     flat: 1000,
     house: 5000,
     palace: 10000
+  };
+
+  const Form = {
+    MIN_LENGTH_TITLE: 30,
+    MAX_LENGTH_TITLE: 100
   };
 
   const mainPin = document.querySelector(`.map__pin--main`);
@@ -49,7 +51,7 @@
   // Поле «Тип жилья» изменяет минимальное значение поля «Цена за ночь»
   const validatePriceByType = () => {
     const type = selectType.value;
-    const minPrice = MinPriceByType[type];
+    const minPrice = MIN_PRICE_BY_TYPE[type];
 
     if (type) {
       inputPrice.min = minPrice;
@@ -60,8 +62,8 @@
   // Поле «Цена за ночь» - валидация минимального значения
   const validateMinPriceByType = () => {
     const type = selectType.value;
-    const minPrice = MinPriceByType[type];
-    const currentPrice = inputPrice.value;
+    const minPrice = MIN_PRICE_BY_TYPE[type];
+    const currentPrice = parseInt(inputPrice.value, 10);
 
     if (currentPrice < minPrice) {
       inputPrice.setCustomValidity(`Минимальная цена для типа жилья  ${selectType.options[selectType.selectedIndex].text} - ${minPrice} руб. за ночь. Увеличьте цену на ${minPrice - currentPrice} руб.`);
@@ -156,7 +158,7 @@
   };
 
   const onSuccessSendData = () => {
-    window.sync.sendData(new FormData(adForm), () => {
+    window.sync.onload(new FormData(adForm), () => {
       window.disable.disablePage(true);
 
       mainPin.addEventListener(`mousedown`, window.activate.onMainPinClick);

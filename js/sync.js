@@ -3,13 +3,16 @@
 
 (() => {
 
-  const sendURL = `https://21.javascript.pages.academy/keksobooking`;
-  const getURL = `https://21.javascript.pages.academy/keksobooking/data`;
+  const TIMEOUT_IN_MS = 10000;
+
+  const Urls = {
+    ONLOAD: `https://21.javascript.pages.academy/keksobooking`,
+    LOAD: `https://21.javascript.pages.academy/keksobooking/data`
+  };
+
   const statusCode = {
     OK: 200
   };
-
-  const TIMEOUT_IN_MS = 1000;
 
   const Methods = {
     GET: `GET`,
@@ -43,7 +46,7 @@
   };
 
 
-  const request = (data, onSuccess, URL, method = Methods.GET, onError) => {
+  const request = (URL, onSuccess, onError, method = Methods.GET, data) => {
     const xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
 
@@ -63,20 +66,19 @@
 
 
   // Отправляем на сервер
-  const sendData = (data, onSuccess) => {
-    request(data, onSuccess, sendURL, Methods.POST);
+  const onload = (data, onSuccess) => {
+    request(Urls.ONLOAD, onSuccess, window.error.onError, Methods.POST, data);
   };
 
-
   // Загружаем с сервера
-  const getData = (onSuccess, onError) => {
-    request(null, onSuccess, getURL, Methods.GET, onError);
+  const load = (onSuccess) => {
+    request(Urls.LOAD, onSuccess, window.error.onError, Methods.GET, null);
   };
 
 
   window.sync = {
-    sendData,
-    getData
+    onload,
+    load
   };
 
 
