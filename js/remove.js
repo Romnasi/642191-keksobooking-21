@@ -1,7 +1,7 @@
 // remove.js
 'use strict';
 
-(function () {
+(() => {
 
   const map = document.querySelector(`.map`);
   // Метка активации
@@ -9,7 +9,7 @@
 
 
   // Удаляем карточку
-  const removeCard = function () {
+  const removeCard = () => {
     const card = document.querySelector(`.popup`);
     if (card) {
       card.remove();
@@ -17,16 +17,16 @@
   };
 
   // Удаляем потомков у элемента
-  const removeChildren = function (element) {
+  const removeChildren = (element) => {
     while (element.firstChild) {
       element.firstChild.remove();
     }
   };
 
   // Удаляем пины кроме главного
-  const removePins = function () {
+  const removePins = () => {
     const pins = document.querySelectorAll(`.map__pin`);
-    pins.forEach(function (pin) {
+    pins.forEach((pin) => {
       if (pin !== mainPin) {
         pin.remove();
       }

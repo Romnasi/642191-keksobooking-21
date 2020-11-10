@@ -1,20 +1,22 @@
 // form.js
 'use strict';
 
-(function () {
+(() => {
 
   // Валидация формы
 
-  const Form = {
-    MIN_LENGTH_TITLE: 30,
-    MAX_LENGTH_TITLE: 100
-  };
-
-  const MinPriceByType = {
+  // Это не перечисления
+  // Это объект для маппинга
+  const MIN_PRICE_BY_TYPE = {
     bungalow: 0,
     flat: 1000,
     house: 5000,
     palace: 10000
+  };
+
+  const Form = {
+    MIN_LENGTH_TITLE: 30,
+    MAX_LENGTH_TITLE: 100
   };
 
   const mainPin = document.querySelector(`.map__pin--main`);
@@ -31,7 +33,7 @@
 
 
   // Поле "Заголовок объявления"
-  const validateTitle = function () {
+  const validateTitle = () => {
     const valueLength = inputTitle.value.length;
 
     if (valueLength < Form.MIN_LENGTH_TITLE) {
@@ -47,9 +49,9 @@
 
 
   // Поле «Тип жилья» изменяет минимальное значение поля «Цена за ночь»
-  const validatePriceByType = function () {
+  const validatePriceByType = () => {
     const type = selectType.value;
-    const minPrice = MinPriceByType[type];
+    const minPrice = MIN_PRICE_BY_TYPE[type];
 
     if (type) {
       inputPrice.min = minPrice;
@@ -58,10 +60,10 @@
   };
 
   // Поле «Цена за ночь» - валидация минимального значения
-  const validateMinPriceByType = function () {
+  const validateMinPriceByType = () => {
     const type = selectType.value;
-    const minPrice = MinPriceByType[type];
-    const currentPrice = inputPrice.value;
+    const minPrice = MIN_PRICE_BY_TYPE[type];
+    const currentPrice = parseInt(inputPrice.value, 10);
 
     if (currentPrice < minPrice) {
       inputPrice.setCustomValidity(`Минимальная цена для типа жилья  ${selectType.options[selectType.selectedIndex].text} - ${minPrice} руб. за ночь. Увеличьте цену на ${minPrice - currentPrice} руб.`);
@@ -74,7 +76,7 @@
 
 
   // Поля «Время заезда» и «Время выезда» синхронизированы
-  const validateTimeInOut = function (isTimeIn) {
+  const validateTimeInOut = (isTimeIn) => {
     if (isTimeIn) {
       selectTimeOut.value = selectTimeIn.value;
     } else {
@@ -85,7 +87,7 @@
 
   // Поля "Количество комнат" - "Количество мест"
   // Синхронизация полей Количество комнат - количество мест
-  const validateRoomsCapacity = function (element) {
+  const validateRoomsCapacity = (element) => {
     const currentRooms = parseInt(roomsNumber.value, 10);
     const currentCapacity = parseInt(roomsCapacity.value, 10);
 
@@ -103,37 +105,37 @@
   };
 
 
-  const onInputTitleInput = function () {
+  const onInputTitleInput = () => {
     validateTitle();
   };
 
-  const onSelectTypeChange = function () {
+  const onSelectTypeChange = () => {
     validatePriceByType();
   };
 
-  const onInputPriceInput = function () {
+  const onInputPriceInput = () => {
     validateMinPriceByType();
   };
 
-  const onSelectTimeInChange = function () {
+  const onSelectTimeInChange = () => {
     validateTimeInOut(true);
   };
 
-  const onSelectTimeOutChange = function () {
+  const onSelectTimeOutChange = () => {
     validateTimeInOut(false);
   };
 
   //  Обработчик на изменение опции в селекте комнаты
-  const onSelectRoomsChange = function () {
+  const onSelectRoomsChange = () => {
     validateRoomsCapacity(roomsNumber);
   };
   // Обработчик на изменение опции в селекте количество мест
-  const onSelectCapacityChange = function () {
+  const onSelectCapacityChange = () => {
     validateRoomsCapacity(roomsCapacity);
   };
 
 
-  const onFormChange = function (on) {
+  const onFormChange = (on) => {
     if (on) {
       selectTimeIn.addEventListener(`change`, onSelectTimeInChange);
       selectTimeOut.addEventListener(`change`, onSelectTimeOutChange);
@@ -155,17 +157,20 @@
     }
   };
 
-  const successSendDataHandler = function () {
-    window.sync.sendData(new FormData(adForm), function () {
-      window.disable.disablePage(true);
+  const onSuccessSendData = () => {
+    window.sync.onload(new FormData(adForm), () => {
+
+      window.reset.resetPage();
+
+      window.popup.showSuccesPopup();
 
       mainPin.addEventListener(`mousedown`, window.activate.onMainPinClick);
       mainPin.addEventListener(`keydown`, window.activate.onMainPinPress);
     });
   };
 
-  adForm.addEventListener(`submit`, function (evt) {
-    successSendDataHandler();
+  adForm.addEventListener(`submit`, (evt) => {
+    onSuccessSendData();
     evt.preventDefault();
   });
 

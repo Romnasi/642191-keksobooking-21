@@ -1,7 +1,7 @@
 // data.js
 'use strict';
 
-(function () {
+(() => {
 
   const Offer = {
     TITLE: [
@@ -54,12 +54,12 @@
   let rooms = Offer.MIN_ROOMS;
 
   // Значения для author
-  const getAvatarUrl = function (i) {
+  const getAvatarUrl = (i) => {
     let urlId = String(i + 1).padStart(2, `0`); // ТЗ: число от 1 до 8 с ведущим нулём
     return `img/avatars/user${urlId}.png`;
   };
 
-  const getAdAuthor = function (i) {
+  const getAdAuthor = (i) => {
     let author = {
       avatar: getAvatarUrl(i)
     };
@@ -68,19 +68,19 @@
 
 
   // Генерирует количество комнат
-  const getOfferRooms = function (minElement, maxElement) {
+  const getOfferRooms = (minElement, maxElement) => {
     rooms = window.util.getRandomIntInclusive(minElement, maxElement);
     return rooms;
   };
 
   // Генерирует количество гостей
-  const getOfferGuests = function () {
+  const getOfferGuests = () => {
     return rooms * Offer.PERSON_PER_ROOM;
   };
 
 
   // Генерирует координаты
-  const getAdLocation = function () {
+  const getAdLocation = () => {
     const adLocation = {
       x: window.util.getRandomIntInclusive(MapSize.MIN_WIDTH, MapSize.MAX_WIDTH),
       y: window.util.getRandomIntInclusive(MapSize.MIN_HEIGHT, MapSize.MAX_HEIGHT)
@@ -90,14 +90,14 @@
 
 
   // Генерирует массив случайной длины
-  const getRandomLengthArray = function (minimumQuantity, elements) {
+  const getRandomLengthArray = (minimumQuantity, elements) => {
     const tailIndex = window.util.getRandomIntInclusive(minimumQuantity, elements.length);
     return elements.slice(0, tailIndex);
   };
 
 
   // Генерирует содержание предложения
-  const getAdOffer = function (location) {
+  const getAdOffer = (location) => {
     let adOffer = {
       title: window.util.getRandomElement(Offer.TITLE),
       address: location,
@@ -116,7 +116,7 @@
 
 
   // Генерирует массив с данными объявлений
-  const getAds = function () {
+  const getAds = () => {
     const ads = [];
 
     for (let i = 0; i < NUMBER_OF_ADS; i++) {
@@ -131,13 +131,13 @@
     return ads;
   };
 
-  const createOfferFeature = function (element) {
+  const createOfferFeature = (element) => {
     const childElement = document.createElement(`li`);
     childElement.classList.add(`popup__feature`, `popup__feature--${element}`);
     return childElement;
   };
 
-  const createOfferImg = function (element) {
+  const createOfferImg = (element) => {
     const childElement = document.createElement(`img`);
     childElement.src = element;
     childElement.classList.add(`popup__photo`);

@@ -2,7 +2,7 @@
 'use strict';
 // Создаем пин объявления
 
-(function () {
+(() => {
 
   const Pin = {
     WIDTH: 50,
@@ -18,7 +18,7 @@
     .querySelector(`.map__pin`);
 
 
-  const renderPinOnMap = function (ad) {
+  const renderPinOnMap = (ad) => {
     const pinElement = pinTemplate.cloneNode(true);
     const pinX = ad.location.x - Pin.WIDTH / 2;
     const pinY = ad.location.y - Pin.HEIGHT;
@@ -28,16 +28,16 @@
     avatarElement.src = ad.author.avatar;
     avatarElement.alt = ad.offer.title;
 
-    const showCard = function () {
+    const showCard = () => {
       window.remove.removeCard();
       window.map.renderCardOnMap(ad);
     };
 
-    const onPinElementClick = function () {
+    const onPinElementClick = () => {
       showCard();
     };
 
-    const onPinElementPress = function (evt) {
+    const onPinElementPress = (evt) => {
       window.util.isEnterEvent(evt, showCard);
     };
 
@@ -49,7 +49,7 @@
   };
 
   // Добавляем карточку на карту
-  const renderCardOnMap = function (ad) {
+  const renderCardOnMap = (ad) => {
     map.insertBefore(window.card.renderCard(ad), filtersContainer);
   };
 
