@@ -14,6 +14,8 @@
     window.form.onFormChange(true);
     mainPin.disabled = false;
 
+    window.reset.onResetButton();
+
     // Удаляем обработчики с главного пина
     mainPin.removeEventListener(`mousedown`, onMainPinClick);
     mainPin.removeEventListener(`keydown`, onMainPinPress);

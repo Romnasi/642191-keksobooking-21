@@ -159,7 +159,10 @@
 
   const onSuccessSendData = () => {
     window.sync.onload(new FormData(adForm), () => {
-      window.disable.disablePage(true);
+
+      window.reset.resetPage();
+
+      window.popup.showSuccesPopup();
 
       mainPin.addEventListener(`mousedown`, window.activate.onMainPinClick);
       mainPin.addEventListener(`keydown`, window.activate.onMainPinPress);

@@ -67,12 +67,12 @@
 
   // Отправляем на сервер
   const onload = (data, onSuccess) => {
-    request(Urls.ONLOAD, onSuccess, window.error.onError, Methods.POST, data);
+    request(Urls.ONLOAD, onSuccess, window.popup.onError, Methods.POST, data);
   };
 
   // Загружаем с сервера
   const load = (onSuccess) => {
-    request(Urls.LOAD, onSuccess, window.error.onError, Methods.GET, null);
+    request(Urls.LOAD, onSuccess, window.popup.onError, Methods.GET, null);
   };
 
 

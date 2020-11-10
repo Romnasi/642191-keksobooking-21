@@ -34,11 +34,17 @@
   };
 
 
+  const getCoordMainPin = () => {
+    inputAddress.value = getLocationMainPin(DisabledMainPin.WIDTH, DisabledMainPin.HEIGHT, DisabledMainPin.PROPORTION);
+  };
+
+
   // Неактивное состояние страницы
   const disablePage = (isDisabled) => {
     if (isDisabled) {
       map.classList.add(`map--faded`);
       adForm.classList.add(`ad-form--disabled`);
+      // метки похожих объявлений и карточка активного объявления удаляются;
       window.remove.removePins();
       window.remove.removeCard();
     } else {
@@ -50,11 +56,13 @@
     changeFormState(adForm, isDisabled);
     changeFormState(mapFilters, isDisabled);
 
-    inputAddress.value = getLocationMainPin(DisabledMainPin.WIDTH, DisabledMainPin.HEIGHT, DisabledMainPin.PROPORTION);
+
+    getCoordMainPin();
   };
 
   window.disable = {
-    disablePage
+    disablePage,
+    getCoordMainPin
   };
 
 })();

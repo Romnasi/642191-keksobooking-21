@@ -14,6 +14,10 @@
     }
   };
 
+  const isClickEvent = (action) => {
+    action();
+  };
+
   const isEnterEvent = (evt, action) => {
     if (evt.keyCode === Keycode.ENTER) {
       action();
@@ -70,6 +74,7 @@
 
   window.util = {
     isEscEvent,
+    isClickEvent,
     isEnterEvent,
     isMainMouseButtonEvent,
     getRandomIntInclusive,
