@@ -8,14 +8,14 @@
   const resetButton = adForm.querySelector(`.ad-form__reset`);
   const mapFilters = document.querySelector(`.map__filters`);
 
-  const MainPinStartCoords = {
+  const MainPinStartCoord = {
     Y: 375,
     X: 570
   };
 
   const moveToStartPosition = () => {
-    mainPin.style.left = `${MainPinStartCoords.X}px`;
-    mainPin.style.top = `${MainPinStartCoords.Y}px`;
+    mainPin.style.left = `${MainPinStartCoord.X}px`;
+    mainPin.style.top = `${MainPinStartCoord.Y}px`;
   };
 
   const resetPage = () => {

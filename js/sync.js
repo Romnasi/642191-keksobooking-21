@@ -5,16 +5,16 @@
 
   const TIMEOUT_IN_MS = 10000;
 
-  const Urls = {
+  const Url = {
     ONLOAD: `https://21.javascript.pages.academy/keksobooking`,
     LOAD: `https://21.javascript.pages.academy/keksobooking/data`
   };
 
-  const statusCode = {
+  const StatusCode = {
     OK: 200
   };
 
-  const Methods = {
+  const Method = {
     GET: `GET`,
     POST: `POST`
   };
@@ -22,7 +22,7 @@
 
   // Проверяем статус ответа сервера
   const checkStatusCode = (xhr, onSuccess, onError) => {
-    if (xhr.status === statusCode.OK) {
+    if (xhr.status === StatusCode.OK) {
       onSuccess(xhr.response);
     } else {
       onError(`Статус ответа: ` + xhr.status + ` ` + xhr.statusText);
@@ -46,7 +46,7 @@
   };
 
 
-  const request = (URL, onSuccess, onError, method = Methods.GET, data) => {
+  const request = (URL, onSuccess, onError, method = Method.GET, data) => {
     const xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
 
@@ -67,12 +67,12 @@
 
   // Отправляем на сервер
   const onload = (data, onSuccess) => {
-    request(Urls.ONLOAD, onSuccess, window.popup.onError, Methods.POST, data);
+    request(Url.ONLOAD, onSuccess, window.popup.onError, Method.POST, data);
   };
 
   // Загружаем с сервера
   const load = (onSuccess) => {
-    request(Urls.LOAD, onSuccess, window.popup.onError, Methods.GET, null);
+    request(Url.LOAD, onSuccess, window.popup.onError, Method.GET, null);
   };
 
 
