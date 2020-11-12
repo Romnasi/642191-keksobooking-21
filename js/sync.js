@@ -52,7 +52,6 @@
 
     xhr.addEventListener(`load`, () => {
       checkStatusCode(xhr, onSuccess, onError);
-      onSuccess(xhr.response);
     });
 
     xhr.timeout = TIMEOUT_IN_MS;

@@ -6,9 +6,37 @@
   const mapAds = map.querySelector(`.map__pins`);
   const mainPin = map.querySelector(`.map__pin--main`);
 
+  const mapFilters = document.querySelector(`.map__filters`);
+  const selectHousingType = mapFilters.querySelector(`#housing-type`);
+
+  let similarAds = [];
+  let housingType = `any`;
+
+  selectHousingType.addEventListener(`change`, () => {
+    housingType = selectHousingType.value;
+    updateAds();
+  });
+
+  const updateAds = () => {
+
+    const someTypeAds = similarAds.filter(function (similarAd) {
+      if (housingType === `any`) {
+        return true;
+      } else {
+        return similarAd.offer.type === housingType;
+      }
+    });
+
+    window.util.renderChildren(mapAds, someTypeAds, window.map.renderPinOnMap, window.remove.removePins);
+    console.log(`тест в updateAds`);
+  };
+
 
   const onSuccess = (ads) => {
-    window.util.renderChildren(mapAds, ads, window.map.renderPinOnMap, window.remove.removePins);
+    similarAds = ads;
+    console.log(`тест в onSuccess`);
+    updateAds();
+
 
     window.disable.disablePage(false);
     window.form.onFormChange(true);
@@ -38,6 +66,14 @@
   const onMainPinPress = (evt) => {
     window.util.isEnterEvent(evt, activatePage);
   };
+
+
+  mainPin.addEventListener(`mousedown`, onMainPinClick);
+  mainPin.addEventListener(`keydown`, onMainPinPress);
+
+
+  // При загрузку неактивное состояние страницы
+  window.disable.disablePage(true);
 
 
   window.activate = {
