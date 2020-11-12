@@ -6,36 +6,11 @@
   const mapAds = map.querySelector(`.map__pins`);
   const mainPin = map.querySelector(`.map__pin--main`);
 
-  const mapFilters = document.querySelector(`.map__filters`);
-  const selectHousingType = mapFilters.querySelector(`#housing-type`);
-
-  let similarAds = [];
-  let housingType = `any`;
-
-  selectHousingType.addEventListener(`change`, () => {
-    housingType = selectHousingType.value;
-    updateAds();
-  });
-
-  const updateAds = () => {
-
-    const someTypeAds = similarAds.filter(function (similarAd) {
-      if (housingType === `any`) {
-        return true;
-      } else {
-        return similarAd.offer.type === housingType;
-      }
-    });
-
-    window.util.renderChildren(mapAds, someTypeAds, window.map.renderPinOnMap, window.remove.removePins);
-    console.log(`тест в updateAds`);
-  };
-
 
   const onSuccess = (ads) => {
-    similarAds = ads;
-    console.log(`тест в onSuccess`);
-    updateAds();
+    window.similarAds = ads;
+    let filteredAds = window.filter.getFilteredAds();
+    window.util.renderChildren(mapAds, filteredAds, window.map.renderPinOnMap, window.remove.removePins);
 
 
     window.disable.disablePage(false);
