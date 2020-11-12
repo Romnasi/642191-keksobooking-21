@@ -8,7 +8,10 @@
 
 
   const onSuccess = (ads) => {
-    window.util.renderChildren(mapAds, ads, window.map.renderPinOnMap, window.remove.removePins);
+    window.similarAds = ads;
+    let filteredAds = window.filter.getFilteredAds();
+    window.util.renderChildren(mapAds, filteredAds, window.map.renderPinOnMap, window.remove.removePins);
+
 
     window.disable.disablePage(false);
     window.form.onFormChange(true);
@@ -38,6 +41,14 @@
   const onMainPinPress = (evt) => {
     window.util.isEnterEvent(evt, activatePage);
   };
+
+
+  mainPin.addEventListener(`mousedown`, onMainPinClick);
+  mainPin.addEventListener(`keydown`, onMainPinPress);
+
+
+  // При загрузку неактивное состояние страницы
+  window.disable.disablePage(true);
 
 
   window.activate = {

@@ -3,7 +3,8 @@
 
 (() => {
 
-  const Types = {
+  // Словарь типов жилья
+  const type = {
     bungalow: `Бунгало`,
     flat: `Квартира`,
     house: `Дом`,
@@ -46,7 +47,7 @@
       cardPrice.textContent = `${ad.offer.price}₽/ночь`;
     }
     if (ad.offer.type) {
-      cardType.textContent = Types[ad.offer.type];
+      cardType.textContent = type[ad.offer.type];
     }
     if (ad.offer.rooms) {
       cardCapacity.textContent = `${ad.offer.rooms} комнаты для ${ad.offer.guests} гостей`;
