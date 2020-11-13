@@ -9,10 +9,27 @@
   const mapAds = map.querySelector(`.map__pins`);
   const mapFilters = document.querySelector(`.map__filters`);
   const selectHousingType = mapFilters.querySelector(`#housing-type`);
+  const selectHousingPrice = mapFilters.querySelector(`#housing-price`);
 
 
   const currentFilter = {
-    'housing-type': `any`
+    'housing-type': `any`,
+    'housing-price': `any`
+  };
+
+  const rentalPrice = {
+    'any': {
+      MIN: 0,
+      MAX: Infinity},
+    'low': {
+      MIN: 0,
+      MAX: 9999},
+    'middle': {
+      MIN: 10000,
+      MAX: 49999},
+    'high': {
+      MIN: 50000,
+      MAX: Infinity}
   };
 
   // Проверяем выбран ли option "любые"
@@ -22,23 +39,42 @@
 
 
   // Сравниваем значения объявлений и фильтра
-  const is = function (elementValue, filterValue) {
+  const is = (elementValue, filterValue) => {
     return isAny(filterValue) || elementValue === filterValue;
   };
 
 
-  // Получаем отфильтрованные объявления
-  const getFilteredAds = () => {
+  // Сравниваем объявления по цене
+  const checkPrice = (elementValue, filterValue) => {
+    let minPrice = rentalPrice[filterValue].MIN;
+    let maxPrice = rentalPrice[filterValue].MAX;
+    return isAny(filterValue) || (minPrice <= elementValue && elementValue <= maxPrice);
+  };
+
+
+  const isSimilarAds = (element) => {
+    return is(element.offer.type, currentFilter[`housing-type`])
+      && checkPrice(element.offer.price, currentFilter[`housing-price`]);
+  };
+
+
+  const filter = (elements, cb, count) => {
     const outElements = [];
-    for (let i = 0; i < window.similarAds.length && outElements.length !== MAX_SIMILAR_AD_COUNT; i++) {
-      const similarAd = window.similarAds[i];
-      if (!is(similarAd.offer.type, currentFilter[`housing-type`])) {
+    for (let i = 0; i < elements.length && outElements.length !== count; i++) {
+      const element = elements[i];
+      if (!cb(element, i, elements)) {
         continue;
       }
-      outElements.push(similarAd);
+      outElements.push(element);
     }
-
     return outElements;
+  };
+
+
+  const getFilteredAds = function () {
+    const ads = window.similarAds;
+
+    return filter(ads, isSimilarAds, MAX_SIMILAR_AD_COUNT);
   };
 
 
@@ -51,6 +87,7 @@
   };
 
   selectHousingType.addEventListener(`change`, onSelectFilterChange);
+  selectHousingPrice.addEventListener(`change`, onSelectFilterChange);
 
 
   window.filter = {
