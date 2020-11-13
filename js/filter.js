@@ -10,11 +10,13 @@
   const mapFilters = document.querySelector(`.map__filters`);
   const selectHousingType = mapFilters.querySelector(`#housing-type`);
   const selectHousingPrice = mapFilters.querySelector(`#housing-price`);
+  const selectHousingRooms = mapFilters.querySelector(`#housing-rooms`);
 
 
   const currentFilter = {
     'housing-type': `any`,
-    'housing-price': `any`
+    'housing-price': `any`,
+    'housing-rooms': `any`
   };
 
   const rentalPrice = {
@@ -51,10 +53,19 @@
     return isAny(filterValue) || (minPrice <= elementValue && elementValue <= maxPrice);
   };
 
+  // Сравниваем значения объявлений и фильтра по комнатам
+  const checkRooms = (elementValue, filterValue) => {
+    if (filterValue !== `any`) {
+      filterValue = parseInt(filterValue, 10);
+    }
+    return isAny(filterValue) || elementValue === filterValue;
+  };
+
 
   const isSimilarAds = (element) => {
     return is(element.offer.type, currentFilter[`housing-type`])
-      && checkPrice(element.offer.price, currentFilter[`housing-price`]);
+      && checkPrice(element.offer.price, currentFilter[`housing-price`])
+      && checkRooms(element.offer.rooms, currentFilter[`housing-rooms`]);
   };
 
 
@@ -88,6 +99,7 @@
 
   selectHousingType.addEventListener(`change`, onSelectFilterChange);
   selectHousingPrice.addEventListener(`change`, onSelectFilterChange);
+  selectHousingRooms.addEventListener(`change`, onSelectFilterChange);
 
 
   window.filter = {
