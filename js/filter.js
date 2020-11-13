@@ -11,14 +11,26 @@
   const selectHousingType = mapFilters.querySelector(`#housing-type`);
   const selectHousingPrice = mapFilters.querySelector(`#housing-price`);
   const selectHousingRooms = mapFilters.querySelector(`#housing-rooms`);
+  const selectHousingGuests = mapFilters.querySelector(`#housing-guests`);
+  const featureFieldset = mapFilters.querySelector(`.map__features`);
 
 
+  // Словарь состояний фильтров для маппинга
   const currentFilter = {
     'housing-type': `any`,
     'housing-price': `any`,
-    'housing-rooms': `any`
+    'housing-rooms': `any`,
+    'housing-guests': `any`,
+    'filter-wifi': `any`,
+    'filter-dishwasher': `any`,
+    'filter-parking': `any`,
+    'filter-washer': `any`,
+    'filter-elevator': `any`,
+    'filter-conditioner': `any`
   };
 
+
+  // Словарь цен для маппинга
   const rentalPrice = {
     'any': {
       MIN: 0,
@@ -34,6 +46,7 @@
       MAX: Infinity}
   };
 
+
   // Проверяем выбран ли option "любые"
   const isAny = function (filterValue) {
     return filterValue === `any`;
@@ -41,7 +54,7 @@
 
 
   // Сравниваем значения объявлений и фильтра
-  const is = (elementValue, filterValue) => {
+  const checkType = (elementValue, filterValue) => {
     return isAny(filterValue) || elementValue === filterValue;
   };
 
@@ -53,8 +66,9 @@
     return isAny(filterValue) || (minPrice <= elementValue && elementValue <= maxPrice);
   };
 
+
   // Сравниваем значения объявлений и фильтра по комнатам
-  const checkRooms = (elementValue, filterValue) => {
+  const checkNumbers = (elementValue, filterValue) => {
     if (filterValue !== `any`) {
       filterValue = parseInt(filterValue, 10);
     }
@@ -62,10 +76,23 @@
   };
 
 
+  // Сравниваем значения объявлений и фильтра
+  const checkFeatures = (elementValue, filterValue) => {
+    return isAny(filterValue) || elementValue.includes(filterValue);
+  };
+
+
   const isSimilarAds = (element) => {
-    return is(element.offer.type, currentFilter[`housing-type`])
+    return checkType(element.offer.type, currentFilter[`housing-type`])
       && checkPrice(element.offer.price, currentFilter[`housing-price`])
-      && checkRooms(element.offer.rooms, currentFilter[`housing-rooms`]);
+      && checkNumbers(element.offer.rooms, currentFilter[`housing-rooms`])
+      && checkNumbers(element.offer.guests, currentFilter[`housing-guests`])
+      && checkFeatures(element.offer.features, currentFilter[`filter-wifi`])
+      && checkFeatures(element.offer.features, currentFilter[`filter-dishwasher`])
+      && checkFeatures(element.offer.features, currentFilter[`filter-parking`])
+      && checkFeatures(element.offer.features, currentFilter[`filter-washer`])
+      && checkFeatures(element.offer.features, currentFilter[`filter-elevator`])
+      && checkFeatures(element.offer.features, currentFilter[`filter-conditioner`]);
   };
 
 
@@ -89,17 +116,35 @@
   };
 
 
+  // Перезаписываем значение текущего чекбокса
+  const changeCheckbox = (evt) => {
+    if (currentFilter[evt.target.id] !== evt.target.value) {
+      currentFilter[evt.target.id] = evt.target.value;
+    } else {
+      currentFilter[evt.target.id] = `any`;
+    }
+  };
+
+
   const onSelectFilterChange = (evt) => {
-    // Перезаписываем значение текущего селекта
-    currentFilter[evt.target.name] = evt.target.value;
+    if (evt.target.type === `checkbox`) {
+      changeCheckbox(evt);
+    } else {
+      // Перезаписываем значение текущего селекта
+      currentFilter[evt.target.name] = evt.target.value;
+    }
     let filteredAds = getFilteredAds();
     window.remove.removeCard();
     window.util.renderChildren(mapAds, filteredAds, window.map.renderPinOnMap, window.remove.removePins);
   };
 
+
   selectHousingType.addEventListener(`change`, onSelectFilterChange);
   selectHousingPrice.addEventListener(`change`, onSelectFilterChange);
   selectHousingRooms.addEventListener(`change`, onSelectFilterChange);
+  selectHousingGuests.addEventListener(`change`, onSelectFilterChange);
+  // Делегирование, получаем события чекбоксов через филдсет
+  featureFieldset.addEventListener(`change`, onSelectFilterChange);
 
 
   window.filter = {
