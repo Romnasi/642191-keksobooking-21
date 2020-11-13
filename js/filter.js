@@ -48,7 +48,7 @@
 
 
   // Проверяем выбран ли option "любые"
-  const isAny = function (filterValue) {
+  const isAny = (filterValue) => {
     return filterValue === `any`;
   };
 
@@ -109,7 +109,7 @@
   };
 
 
-  const getFilteredAds = function () {
+  const getFilteredAds = () => {
     const ads = window.similarAds;
 
     return filter(ads, isSimilarAds, MAX_SIMILAR_AD_COUNT);

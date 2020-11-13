@@ -1,5 +1,4 @@
 // move.js
-
 "use strict";
 
 (() => {
