@@ -131,6 +131,15 @@
       : `any`;
   };
 
+  const renderFilteredAds = () => {
+    const filteredAds = getFilteredAds();
+    window.remove.removeCard();
+    window.util.renderChildren(mapAds, filteredAds, window.map.renderPinOnMap, window.remove.removePins);
+  };
+
+
+  const renderFilteredAdsDebounced = window.debounce(renderFilteredAds);
+
 
   const onSelectFilterChange = (evt) => {
     if (evt.target.type === `checkbox`) {
@@ -139,9 +148,8 @@
       // Перезаписываем значение текущего селекта
       currentFilter[evt.target.name] = evt.target.value;
     }
-    let filteredAds = getFilteredAds();
-    window.remove.removeCard();
-    window.util.renderChildren(mapAds, filteredAds, window.map.renderPinOnMap, window.remove.removePins);
+
+    renderFilteredAdsDebounced();
   };
 
 

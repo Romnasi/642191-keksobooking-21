@@ -7,7 +7,7 @@
 
   const onSuccess = (ads) => {
     window.similarAds = ads;
-    let filteredAds = window.filter.getFilteredAds();
+    const filteredAds = window.filter.getFilteredAds();
     window.util.renderChildren(mapAds, filteredAds, window.map.renderPinOnMap, window.remove.removePins);
 
 
