@@ -28,13 +28,13 @@
     // значение поля адреса корректируется соответственно положению метки.
     window.disable.getCoordMainPin();
     window.form.onFormChange(false);
+    window.filter.resetCurrentFilter();
   };
 
 
   const onResetButtonClick = () => {
     resetPage();
-    mainPin.addEventListener(`mousedown`, window.activate.onMainPinClick);
-    mainPin.addEventListener(`keydown`, window.activate.onMainPinPress);
+    window.pin.addEventListenersOnPin();
   };
 
   const onResetButtonPress = (evt) => {

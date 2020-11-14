@@ -15,35 +15,43 @@
   const featureFieldset = mapFilters.querySelector(`.map__features`);
 
 
-  // Словарь состояний фильтров для маппинга
-  const currentFilter = {
-    'housing-type': `any`,
-    'housing-price': `any`,
-    'housing-rooms': `any`,
-    'housing-guests': `any`,
-    'filter-wifi': `any`,
-    'filter-dishwasher': `any`,
-    'filter-parking': `any`,
-    'filter-washer': `any`,
-    'filter-elevator': `any`,
-    'filter-conditioner': `any`
+  // Создаем словарь состояний фильтров
+  const createInitialFilters = () => {
+    return {
+      'housing-type': `any`,
+      'housing-price': `any`,
+      'housing-rooms': `any`,
+      'housing-guests': `any`,
+      'filter-wifi': `any`,
+      'filter-dishwasher': `any`,
+      'filter-parking': `any`,
+      'filter-washer': `any`,
+      'filter-elevator': `any`,
+      'filter-conditioner': `any`
+    };
+  };
+
+  let currentFilter = createInitialFilters();
+
+  const resetCurrentFilter = () => {
+    currentFilter = createInitialFilters();
   };
 
 
   // Словарь цен для маппинга
   const rentalPrice = {
-    'any': {
-      MIN: 0,
-      MAX: Infinity},
-    'low': {
-      MIN: 0,
-      MAX: 9999},
-    'middle': {
-      MIN: 10000,
-      MAX: 49999},
-    'high': {
-      MIN: 50000,
-      MAX: Infinity}
+    any: {
+      min: 0,
+      max: Infinity},
+    low: {
+      min: 0,
+      max: 9999},
+    middle: {
+      min: 10000,
+      max: 49999},
+    high: {
+      min: 50000,
+      max: Infinity}
   };
 
 
@@ -61,8 +69,8 @@
 
   // Сравниваем объявления по цене
   const checkPrice = (elementValue, filterValue) => {
-    let minPrice = rentalPrice[filterValue].MIN;
-    let maxPrice = rentalPrice[filterValue].MAX;
+    let minPrice = rentalPrice[filterValue].min;
+    let maxPrice = rentalPrice[filterValue].max;
     return isAny(filterValue) || (minPrice <= elementValue && elementValue <= maxPrice);
   };
 
@@ -118,11 +126,9 @@
 
   // Перезаписываем значение текущего чекбокса
   const changeCheckbox = (evt) => {
-    if (currentFilter[evt.target.id] !== evt.target.value) {
-      currentFilter[evt.target.id] = evt.target.value;
-    } else {
-      currentFilter[evt.target.id] = `any`;
-    }
+    currentFilter[evt.target.id] = currentFilter[evt.target.id] !== evt.target.value
+      ? evt.target.value
+      : `any`;
   };
 
 
@@ -148,6 +154,7 @@
 
 
   window.filter = {
+    resetCurrentFilter,
     getFilteredAds
   };
 

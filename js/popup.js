@@ -36,8 +36,7 @@
     if (popup) {
       popup.remove();
     }
-    mainPin.addEventListener(`mousedown`, window.activate.onMainPinClick);
-    mainPin.addEventListener(`keydown`, window.activate.onMainPinPress);
+    window.pin.addEventListenersOnPin();
     mainPin.disabled = false;
   };
 
@@ -51,8 +50,7 @@
     }
 
     // Удаляем обработчики с главного пина
-    mainPin.removeEventListener(`mousedown`, window.activate.onMainPinClick);
-    mainPin.removeEventListener(`keydown`, window.activate.onMainPinPress);
+    window.pin.removeEventListenersOnPin();
     mainPin.disabled = true;
 
 

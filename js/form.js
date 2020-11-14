@@ -19,7 +19,6 @@
     MAX_LENGTH_TITLE: 100
   };
 
-  const mainPin = document.querySelector(`.map__pin--main`);
 
   // Поля ввода
   const adForm = document.querySelector(`.ad-form`);
@@ -164,8 +163,7 @@
 
       window.popup.showSuccesPopup();
 
-      mainPin.addEventListener(`mousedown`, window.activate.onMainPinClick);
-      mainPin.addEventListener(`keydown`, window.activate.onMainPinPress);
+      window.pin.addEventListenersOnPin();
     });
   };
 

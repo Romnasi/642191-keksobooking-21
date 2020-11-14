@@ -3,6 +3,7 @@
 
 (() => {
   const mapAds = document.querySelector(`.map__pins`);
+  const mainPin = document.querySelector(`.map__pin--main`);
 
   const onSuccess = (ads) => {
     window.similarAds = ads;
@@ -14,7 +15,9 @@
     window.form.onFormChange(true);
 
     window.reset.onResetButton();
-    window.pin.activate();
+    window.pin.removeEventListenersOnPin();
+    // Делаем пин активным
+    mainPin.disabled = false;
   };
 
 
@@ -26,8 +29,10 @@
   };
 
 
-  window.pin.deactivate();
+  window.pin.addEventListenersOnPin();
 
+  // При загрузку неактивное состояние страницы
+  window.disable.disablePage(true);
 
   window.activate = {
     activatePage

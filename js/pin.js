@@ -14,26 +14,22 @@
     window.util.isEnterEvent(evt, window.activate.activatePage);
   };
 
-  const deactivate = () => {
+  const addEventListenersOnPin = () => {
     mainPin.addEventListener(`mousedown`, onMainPinClick);
     mainPin.addEventListener(`keydown`, onMainPinPress);
-    // При загрузку неактивное состояние страницы
-    window.disable.disablePage(true);
   };
 
 
-  const activate = () => {
+  const removeEventListenersOnPin = () => {
     // Удаляем обработчики с главного пина
     mainPin.removeEventListener(`mousedown`, onMainPinClick);
     mainPin.removeEventListener(`keydown`, onMainPinPress);
-    // Делаем пин активным
-    mainPin.disabled = false;
   };
 
 
   window.pin = {
-    activate,
-    deactivate
+    removeEventListenersOnPin,
+    addEventListenersOnPin
   };
 
 })();
