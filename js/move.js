@@ -42,11 +42,11 @@ const writeCoord = (currentCoordX, currentCoordY) => {
 
   // Вызов функции получения координат острого края активной метки
   inputAddress.value = getLocationActiveMainPin(
-    currentCoordX,
-    currentCoordY,
-    ActiveMainPin.WIDTH,
-    ActiveMainPin.HEIGHT,
-    ActiveMainPin.PROPORTION
+      currentCoordX,
+      currentCoordY,
+      ActiveMainPin.WIDTH,
+      ActiveMainPin.HEIGHT,
+      ActiveMainPin.PROPORTION
   );
 };
 

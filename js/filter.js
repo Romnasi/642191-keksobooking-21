@@ -50,7 +50,7 @@ const rentalPrice = {
   high: {
     min: 50000,
     max: Infinity}
-  };
+};
 
 
 // Проверяем выбран ли option "любые"
@@ -125,8 +125,8 @@ const getFilteredAds = () => {
 // Перезаписываем значение текущего чекбокса
 const changeCheckbox = (evt) => {
   currentFilter[evt.target.id] = currentFilter[evt.target.id] !== evt.target.value
-  ? evt.target.value
-  : `any`;
+    ? evt.target.value
+    : `any`;
 };
 
 const renderFilteredAds = () => {
