@@ -7,6 +7,8 @@ const removeCard = () => {
   if (card) {
     card.remove();
   }
+  document.removeEventListener(`keydown`, window.card.onEscPressCloseCard);
+  window.map.removeClassActivePin();
 };
 
 // Удаляем потомков у элемента
