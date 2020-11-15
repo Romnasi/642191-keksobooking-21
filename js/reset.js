@@ -3,20 +3,10 @@
 
 (() => {
 
-  const mainPin = document.querySelector(`.map__pin--main`);
   const adForm = document.querySelector(`.ad-form`);
   const resetButton = adForm.querySelector(`.ad-form__reset`);
   const mapFilters = document.querySelector(`.map__filters`);
 
-  const MainPinStartCoord = {
-    Y: 375,
-    X: 570
-  };
-
-  const moveToStartPosition = () => {
-    mainPin.style.left = `${MainPinStartCoord.X}px`;
-    mainPin.style.top = `${MainPinStartCoord.Y}px`;
-  };
 
   const resetPage = () => {
     window.disable.disablePage(true);
@@ -24,7 +14,7 @@
     adForm.reset();
     mapFilters.reset();
     // метка адреса возвращается в исходное положение;
-    moveToStartPosition();
+    window.pin.moveToStartPosition();
     // значение поля адреса корректируется соответственно положению метки.
     window.disable.getCoordMainPin();
     window.form.onFormChange(false);

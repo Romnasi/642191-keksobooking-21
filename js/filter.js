@@ -118,7 +118,7 @@
 
 
   const getFilteredAds = () => {
-    const ads = window.similarAds;
+    const ads = window.adsData.get();
 
     return filter(ads, isSimilarAds, MAX_SIMILAR_AD_COUNT);
   };
@@ -134,7 +134,7 @@
   const renderFilteredAds = () => {
     const filteredAds = getFilteredAds();
     window.remove.removeCard();
-    window.util.renderChildren(mapAds, filteredAds, window.map.renderPinOnMap, window.remove.removePins);
+    window.util.renderChildren(mapAds, filteredAds, window.map.renderPinOnMap, window.pin.removePins);
   };
 
 

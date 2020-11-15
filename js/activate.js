@@ -6,10 +6,10 @@
   const mainPin = document.querySelector(`.map__pin--main`);
 
   const onSuccess = (ads) => {
-    window.similarAds = ads;
-    const filteredAds = window.filter.getFilteredAds();
-    window.util.renderChildren(mapAds, filteredAds, window.map.renderPinOnMap, window.remove.removePins);
+    window.adsData.set(ads);
 
+    const filteredAds = window.filter.getFilteredAds();
+    window.util.renderChildren(mapAds, filteredAds, window.map.renderPinOnMap, window.pin.removePins);
 
     window.disable.disablePage(false);
     window.form.onFormChange(true);

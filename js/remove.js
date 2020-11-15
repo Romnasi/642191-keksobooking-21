@@ -3,11 +3,6 @@
 
 (() => {
 
-  const map = document.querySelector(`.map`);
-  // Метка активации
-  const mainPin = map.querySelector(`.map__pin--main`);
-
-
   // Удаляем карточку
   const removeCard = () => {
     const card = document.querySelector(`.popup`);
@@ -23,21 +18,10 @@
     }
   };
 
-  // Удаляем пины кроме главного
-  const removePins = () => {
-    const pins = document.querySelectorAll(`.map__pin`);
-    pins.forEach((pin) => {
-      if (pin !== mainPin) {
-        pin.remove();
-      }
-    });
-  };
-
 
   window.remove = {
     removeCard,
-    removeChildren,
-    removePins
+    removeChildren
   };
 
 })();

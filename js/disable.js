@@ -45,7 +45,7 @@
       map.classList.add(`map--faded`);
       adForm.classList.add(`ad-form--disabled`);
       // метки похожих объявлений и карточка активного объявления удаляются;
-      window.remove.removePins();
+      window.pin.removePins();
       window.remove.removeCard();
     } else {
       // Активное состояние
