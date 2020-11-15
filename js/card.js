@@ -63,9 +63,9 @@ const renderCard = (ad) => {
 
   // Cоздаем преимущества
   window.util.renderChildren(
-    cardElement.querySelector(`.popup__features`),
-    ad.offer.features,
-    window.data.createOfferFeature
+      cardElement.querySelector(`.popup__features`),
+      ad.offer.features,
+      window.data.createOfferFeature
   );
 
   cardDescription.textContent = ad.offer.description;
@@ -73,9 +73,9 @@ const renderCard = (ad) => {
 
   // Cоздаем фотографии
   window.util.renderChildren(
-    cardElement.querySelector(`.popup__photos`),
-    ad.offer.photos,
-    window.data.createOfferImg
+      cardElement.querySelector(`.popup__photos`),
+      ad.offer.photos,
+      window.data.createOfferImg
   );
 
   cardAvatar.src = ad.author.avatar;
