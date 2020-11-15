@@ -1,21 +1,18 @@
 // adsData.js
 'use strict';
 
-(() => {
-  let ads = [];
+let ads = [];
 
-  const set = (newAds) => {
-    ads = newAds;
-  };
+const set = (newAds) => {
+  ads = newAds;
+};
 
-  const get = () => {
-    return ads;
-  };
+const get = () => {
+  return ads;
+};
 
 
-  window.adsData = {
-    get,
-    set
-  };
-
-})();
+window.adsData = {
+  get,
+  set
+};
