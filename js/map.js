@@ -31,7 +31,12 @@
       avatarElement.alt = ad.offer.title;
 
       const showCard = () => {
+        const activePin = map.querySelector(`.map__pin--active`)
+        if (activePin) {
+          activePin.classList.remove(`map__pin--active`);
+        }
         window.remove.removeCard();
+        pinElement.classList.add(`map__pin--active`);
         window.map.renderCardOnMap(ad);
       };
 
