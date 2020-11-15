@@ -12,7 +12,6 @@ module.exports = {
     `./js/move.js`,
     `./js/card.js`,
     `./js/disable.js`,
-    `./js/debounce.js`,
     `./js/adsData.js`,
     `./js/filter.js`,
     `./js/activate.js`,

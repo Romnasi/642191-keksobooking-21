@@ -155,7 +155,7 @@ const onFormChange = (on) => {
 };
 
 const onSuccessSendData = () => {
-  window.sync.onDataload(new FormData(adForm), () => {
+  window.sync.save(new FormData(adForm), () => {
 
     window.reset.resetPage();
 

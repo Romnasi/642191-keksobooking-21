@@ -63,7 +63,7 @@ const request = (URL, onSuccess, onError, method = Method.GET, data) => {
 
 
 // Отправляем на сервер
-const onDataload = (data, onSuccess) => {
+const save = (data, onSuccess) => {
   request(Url.ONLOAD, onSuccess, window.popup.onError, Method.POST, data);
 };
 
@@ -74,6 +74,6 @@ const load = (onSuccess) => {
 
 
 window.sync = {
-  onDataload,
+  save,
   load
 };

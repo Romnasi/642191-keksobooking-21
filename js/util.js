@@ -1,6 +1,8 @@
 // util.js
 'use strict';
 
+const DEBOUNCE_INTERVAL = 500; // ms
+
 const Keycode = {
   ESC: 27,
   ENTER: 13,
@@ -29,26 +31,6 @@ const isMainMouseButtonEvent = (evt, action) => {
   }
 };
 
-const getRandomIntInclusive = (min, max) => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min; // Максимум и минимум включаются
-};
-
-const getRandomElement = (elements) => {
-  return elements[window.util.getRandomIntInclusive(0, elements.length - 1)];
-};
-
-const getMaxElement = (elements) => {
-  const maxElement = elements[0];
-
-  for (let i = 1; i < elements.length; i++) {
-    maxElement = Math.max(maxElement, elements[i]);
-  }
-
-  return maxElement;
-};
-
 // 1. Получить в функции список элементов которые хотим отрисовать
 const renderChildren = (parentNode, elements, renderChild, clear = window.remove.removeChildren) => {
   clear(parentNode);
@@ -71,14 +53,26 @@ const forEach = (elements, cb) => {
 };
 
 
+const debounce = (cb) => {
+  let lastTimeout;
+
+  return (...parameters) => {
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+    lastTimeout = window.setTimeout(() => {
+      cb(...parameters);
+    }, DEBOUNCE_INTERVAL);
+  };
+};
+
+
 window.util = {
   isEscEvent,
   isClickEvent,
   isEnterEvent,
   isMainMouseButtonEvent,
-  getRandomIntInclusive,
-  getRandomElement,
-  getMaxElement,
   renderChildren,
-  forEach
+  forEach,
+  debounce
 };
