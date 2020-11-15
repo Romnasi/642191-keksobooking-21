@@ -16,12 +16,19 @@
     .querySelector(`.map__card`);
 
 
+  const onEscPress = (evt) => {
+    window.util.isEscEvent(evt, window.remove.removeCard);
+    document.removeEventListener(`keydown`, onEscPress);
+  };
+
   const onCloseButtonClick = () => {
     window.remove.removeCard();
+    document.removeEventListener(`keydown`, onEscPress);
   };
 
   const onCloseButtonPress = (evt) => {
     window.util.isEnterEvent(evt, window.remove.removeCard);
+    document.removeEventListener(`keydown`, onEscPress);
   };
 
   // Создаем карточку объявления
@@ -78,6 +85,7 @@
     // Обработчики на кнопку закрытия
     const closeButton = cardElement.querySelector(`.popup__close`);
 
+    document.addEventListener(`keydown`, onEscPress);
     closeButton.addEventListener(`click`, onCloseButtonClick);
     closeButton.addEventListener(`keydown`, onCloseButtonPress);
 

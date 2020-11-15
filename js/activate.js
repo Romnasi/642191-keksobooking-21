@@ -6,7 +6,12 @@
   const mainPin = document.querySelector(`.map__pin--main`);
 
   const onSuccess = (ads) => {
-    window.adsData.set(ads);
+    // Если в объекте с описанием объявления отсутствует поле offer, то метка объявления не должна отображаться на карте.
+    const adsWithOffer = ads.filter((ad) => {
+      return ad.offer;
+    });
+
+    window.adsData.set(adsWithOffer);
 
     const filteredAds = window.filter.getFilteredAds();
     window.util.renderChildren(mapAds, filteredAds, window.map.renderPinOnMap, window.pin.removePins);
