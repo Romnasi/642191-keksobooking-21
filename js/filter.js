@@ -136,7 +136,7 @@ const renderFilteredAds = () => {
 };
 
 
-const renderFilteredAdsDebounced = window.debounce(renderFilteredAds);
+const renderFilteredAdsDebounced = window.util.debounce(renderFilteredAds);
 
 
 const onSelectFilterChange = (evt) => {

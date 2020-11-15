@@ -16,6 +16,14 @@ const pinTemplate = document.querySelector(`#pin`)
 .querySelector(`.map__pin`);
 
 
+const removeClassActivePin = () => {
+  const activePin = map.querySelector(`.map__pin--active`);
+  if (activePin) {
+    activePin.classList.remove(`map__pin--active`);
+  }
+};
+
+
 const renderPinOnMap = (ad) => {
   const pinElement = pinTemplate.cloneNode(true);
   const pinX = ad.location.x - Pin.WIDTH / 2;
@@ -26,11 +34,9 @@ const renderPinOnMap = (ad) => {
   avatarElement.src = ad.author.avatar;
   avatarElement.alt = ad.offer.title;
 
+
   const showCard = () => {
-    const activePin = map.querySelector(`.map__pin--active`);
-    if (activePin) {
-      activePin.classList.remove(`map__pin--active`);
-    }
+    removeClassActivePin();
     window.remove.removeCard();
     pinElement.classList.add(`map__pin--active`);
     window.map.renderCardOnMap(ad);
@@ -59,5 +65,6 @@ const renderCardOnMap = (ad) => {
 
 window.map = {
   renderPinOnMap,
-  renderCardOnMap
+  renderCardOnMap,
+  removeClassActivePin
 };
