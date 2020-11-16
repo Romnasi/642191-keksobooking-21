@@ -17,6 +17,7 @@ const resetPage = () => {
   window.disable.getCoordMainPin();
   window.form.onFormChange(false);
   window.filter.resetCurrentFilter();
+  window.preview.resetPreview();
 };
 
 
