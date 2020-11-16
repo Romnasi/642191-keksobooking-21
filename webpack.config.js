@@ -15,6 +15,7 @@ module.exports = {
     `./js/adsData.js`,
     `./js/filter.js`,
     `./js/activate.js`,
+    `./js/preview.js`,
     `./js/reset.js`,
     `./js/form.js`
   ],
