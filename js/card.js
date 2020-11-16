@@ -2,7 +2,8 @@
 'use strict';
 
 // Словарь типов жилья
-const type = {
+// Объект, для маппинга, не перечисление
+const TYPE = {
   bungalow: `Бунгало`,
   flat: `Квартира`,
   house: `Дом`,
@@ -49,7 +50,7 @@ const renderCard = (ad) => {
     cardPrice.textContent = `${ad.offer.price}₽/ночь`;
   }
   if (ad.offer.type) {
-    cardType.textContent = type[ad.offer.type];
+    cardType.textContent = TYPE[ad.offer.type];
   }
   if (ad.offer.rooms) {
     cardCapacity.textContent = `${ad.offer.rooms} комнаты для ${ad.offer.guests} гостей`;
